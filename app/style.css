@@ -1,0 +1,43 @@
+body {
+    margin: 0;
+    overflow: hidden;
+}
+
+:root {
+    /* Set the custom property size to the smaller of vw or vh */
+    --size: calc(min(100vw, 100vh) * 0.98);
+    /* 0.48 to ensure a little space */
+}
+
+.compass-border {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--size);
+    /* Use the custom property for width */
+    height: var(--size);
+    /* and height */
+    border-radius: 50%;
+    border: 5px groove green;
+    box-sizing: border-box;
+    transform: translate(-50%, -50%);
+}
+
+.compass-pointer {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40%;
+    height: 1%;
+    background: black;
+    border-radius: 0 50% 0 50%;
+    transform: rotate(-90deg);
+    /* Centering + Rotation */
+    transform-origin: left;
+    /* Ensure rotation happens around the center */
+
+}
+
+.compass-stats {
+    margin: 5px;
+}
