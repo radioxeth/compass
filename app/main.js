@@ -1,5 +1,4 @@
 const main = () => {
-    console.log('main')
     navigate()
 }
 
@@ -8,8 +7,6 @@ const setCoords = (coords) => {
     document.getElementById('longitude').innerHTML = coords?.longitude ?? 'xx.xxxx'
     document.getElementById('speed').innerHTML = coords?.speed ?? 'xx.xxxx'
     document.getElementById('heading').innerHTML = coords?.heading ?? 'xx.xxxx'
-    document.getElementById('speed').innerHTML = 10
-    document.getElementById('heading').innerHTML = 90
 }
 
 const styleCompass = (heading) => {
@@ -43,9 +40,6 @@ const watchPosition = () => {
 }
 
 const navigate = () => {
-    // window.setInterval(() => {
-    //     getCurrentPosition()
-    // }, 1000)
     watchPosition()
 }
 
