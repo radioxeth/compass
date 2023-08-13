@@ -12,6 +12,9 @@
     <div class="compass-stats">
         <table>
             <tr>
+                <td colspan="2"><span id="time"></span></td>
+            </tr>
+            <tr>
                 <td>Latitude</td>
                 <td><span id="latitude">xx.xxxx</span></td>
             </tr>
@@ -28,7 +31,14 @@
                 <td><span id="heading">xx.xxxx</span></td>
             </tr>
         </table>
-
+    </div>
+    <div class="compass-theme">
+        <div class="theme-switch-wrapper">
+            <label class="theme-switch" for="checkbox">
+                <input type="checkbox" id="checkbox" />
+                <div class="slider round"></div>
+            </label>
+        </div>
     </div>
     <div id="compass-border" class="compass-border">
         <div id="compass-pointer" class="compass-pointer">
