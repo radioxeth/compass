@@ -28,7 +28,9 @@ const speed = (speedMPS) => {
 
 const degreeToCardinal = (deg) => {
     let direction = '--';
-
+    if (!deg) {
+        return direction
+    }
     if ((deg >= 337.5 && deg <= 360) || (deg >= 0 && deg < 22.5)) {
         direction = 'N';
     } else if (deg >= 22.5 && deg < 67.5) {
@@ -53,11 +55,14 @@ const degreeToCardinal = (deg) => {
 
 const styleCompass = (heading) => {
     const compassPointerElement = document.getElementById('compass-pointer')
+    const compassBorderElement = document.getElementById('compass-border')
     if (heading) {
         compassPointerElement.style.display = 'block'
         compassPointerElement.style.transform = `rotate(${heading - 90}deg)`
+        compassBorderElement.innerHTML = degreeToCardinal(heading)
     } else {
         compassPointerElement.style.display = 'none'
+        compassBorderElement.innerHTML = '--'
     }
 }
 
@@ -66,7 +71,6 @@ const watchPosition = () => {
     if ('geolocation' in navigator) {
         // Request the current location
         navigator.geolocation.watchPosition((position) => {
-            console.log(position)
             setCoords(position.coords)
             styleCompass(position.coords.heading)
         }, (error) => {
@@ -93,7 +97,6 @@ const userPreferences = () => {
 
     if (currentTheme) {
         document.documentElement.setAttribute('data-theme', currentTheme);
-
         // If the current theme is dark, check the checkbox
         if (currentTheme === 'dark') {
             themeCheckbox.checked = true;
@@ -110,7 +113,6 @@ const userPreferences = () => {
             localStorage.setItem('theme', 'light');
         }
     });
-
 }
 
 main()

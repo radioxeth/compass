@@ -3,11 +3,17 @@
     --size: calc(min(100vw, 100vh) * 0.98);
     --background-color: #ffffff;
     --text-color: #000000;
+    --pointer-color: #3e0080;
+    --compass-color: #2e0060;
+    --shadow-color: rgba(0, 0, 0, 0.3);
 }
 
 [data-theme="dark"] {
     --background-color: #000000;
     --text-color: #ffffff;
+    --pointer-color: #00ccff;
+    --compass-color: #006680;
+    --shadow-color: rgba(255, 255, 255, 0.3);
     /* Add more dark theme specific variables */
 }
 
@@ -23,7 +29,6 @@ body {
     position: absolute;
     top: 0;
     right: 0;
-
 }
 
 .compass-border {
@@ -35,20 +40,31 @@ body {
     height: var(--size);
     /* and height */
     border-radius: 50%;
-    border: 5px groove green;
+    border: 5px solid var(--compass-color);
     box-sizing: border-box;
     transform: translate(-50%, -50%);
+    box-shadow: 0px 0px 25px var(--shadow-color);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* Optional: text styling */
+    font-size: 12em;
+    text-align: center;
 }
 
 .compass-pointer {
     position: absolute;
     top: 50%;
     left: 50%;
-    width: 40%;
+    width: 45%;
     height: 1%;
-    background: black;
+    background-color: transparent;
+    background: var(--pointer-color);
     border-radius: 0 50% 0 50%;
     transform: rotate(-90deg);
+    box-shadow: 5px 5px 5px var(--shadow-color);
     /* Centering + Rotation */
     transform-origin: left;
     /* Ensure rotation happens around the center */
@@ -109,4 +125,9 @@ input:checked+.slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+.compass-heading {
+    top: 50%;
+    left: 50%;
 }
