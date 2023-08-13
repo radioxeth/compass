@@ -27,29 +27,26 @@ const speed = (speedMPS) => {
 }
 
 const degreeToCardinal = (deg) => {
-    let direction = '--';
-    if (deg === null) {
-        return direction
-    }
+    let direction = '--'
     if ((deg >= 337.5 && deg <= 360) || (deg >= 0 && deg < 22.5)) {
-        direction = 'N';
+        direction = 'N'
     } else if (deg >= 22.5 && deg < 67.5) {
-        direction = 'NE';
+        direction = 'NE'
     } else if (deg >= 67.5 && deg < 112.5) {
-        direction = 'E';
+        direction = 'E'
     } else if (deg >= 112.5 && deg < 157.5) {
-        direction = 'SE';
+        direction = 'SE'
     } else if (deg >= 157.5 && deg < 202.5) {
-        direction = 'S';
+        direction = 'S'
     } else if (deg >= 202.5 && deg < 247.5) {
-        direction = 'SW';
+        direction = 'SW'
     } else if (deg >= 247.5 && deg < 292.5) {
-        direction = 'W';
+        direction = 'W'
     } else if (deg >= 292.5 && deg < 337.5) {
-        direction = 'NW';
+        direction = 'NW'
     }
 
-    return direction;
+    return direction
 }
 
 
@@ -90,29 +87,29 @@ const navigate = () => {
 }
 
 const userPreferences = () => {
-    const themeCheckbox = document.getElementById('checkbox');
+    const themeCheckbox = document.getElementById('checkbox')
 
     // Load the saved theme preference, if any
-    const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+    const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null
 
     if (currentTheme) {
-        document.documentElement.setAttribute('data-theme', currentTheme);
+        document.documentElement.setAttribute('data-theme', currentTheme)
         // If the current theme is dark, check the checkbox
         if (currentTheme === 'dark') {
-            themeCheckbox.checked = true;
+            themeCheckbox.checked = true
         }
     }
 
     // Listen for changes on the checkbox to toggle between themes
     themeCheckbox.addEventListener('change', (e) => {
         if (e.target.checked) {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            localStorage.setItem('theme', 'dark');
+            document.documentElement.setAttribute('data-theme', 'dark')
+            localStorage.setItem('theme', 'dark')
         } else {
-            document.documentElement.setAttribute('data-theme', 'light');
-            localStorage.setItem('theme', 'light');
+            document.documentElement.setAttribute('data-theme', 'light')
+            localStorage.setItem('theme', 'light')
         }
-    });
+    })
 }
 
 main()
