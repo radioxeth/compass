@@ -28,7 +28,7 @@ const speed = (speedMPS) => {
 
 const degreeToCardinal = (deg) => {
     let direction = '--';
-    if (!deg) {
+    if (deg === null) {
         return direction
     }
     if ((deg >= 337.5 && deg <= 360) || (deg >= 0 && deg < 22.5)) {
