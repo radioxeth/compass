@@ -107,5 +107,9 @@ const userPreferences = () => {
         }
     })
 }
-
+window.addEventListener("load", function () {
+    setTimeout(() => {
+        window.scrollTo(0, 1);
+    }, 0);
+});
 main()
