@@ -1,9 +1,3 @@
-const main = () => {
-    watchPosition()
-    userPreferences()
-    clock()
-}
-
 const getTime = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
 
 const clock = () => {
@@ -13,11 +7,35 @@ const clock = () => {
     }, 1000)
 }
 
+const userPreferences = () => {
+    const themeCheckbox = document.getElementById('theme-checkbox')
+    // Load the saved theme preference, if any
+    const currentTheme = localStorage.getItem('theme') ?? null
+    if (currentTheme) {
+        document.documentElement.setAttribute('data-theme', currentTheme)
+        // If the current theme is dark, check the checkbox
+        if (currentTheme === 'dark') {
+            themeCheckbox.checked = true
+        }
+    }
+    // Listen for changes on the checkbox to toggle between themes
+    themeCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            document.documentElement.setAttribute('data-theme', 'dark')
+            localStorage.setItem('theme', 'dark')
+        } else {
+            document.documentElement.setAttribute('data-theme', 'light')
+            localStorage.setItem('theme', 'light')
+        }
+    })
+}
+
 const setStats = (coords) => {
     document.getElementById('latitude').innerHTML = coords?.latitude ?? '--'
     document.getElementById('longitude').innerHTML = coords?.longitude ?? '--'
     document.getElementById('speed').innerHTML = `${speed(coords?.speed)} mph`
-    document.getElementById('heading').innerHTML = degreeToCardinal(coords?.heading)
+    // document.getElementById('heading').innerHTML = degreeToCardinal(coords?.heading)
+    document.getElementById('heading').innerHTML = coords?.heading
 }
 
 const speed = (speedMPS) => {
@@ -50,7 +68,6 @@ const degreeToCardinal = (deg) => {
     return direction
 }
 
-
 const styleCompass = (heading) => {
     const compassPointerElement = document.getElementById('compass-pointer')
     compassPointerElement.style.display = heading ? 'block' : 'none'
@@ -77,26 +94,12 @@ const watchPosition = () => {
     }
 }
 
-const userPreferences = () => {
-    const themeCheckbox = document.getElementById('theme-checkbox')
-    // Load the saved theme preference, if any
-    const currentTheme = localStorage.getItem('theme') ?? null
-    if (currentTheme) {
-        document.documentElement.setAttribute('data-theme', currentTheme)
-        // If the current theme is dark, check the checkbox
-        if (currentTheme === 'dark') {
-            themeCheckbox.checked = true
-        }
-    }
-    // Listen for changes on the checkbox to toggle between themes
-    themeCheckbox.addEventListener('change', (e) => {
-        if (e.target.checked) {
-            document.documentElement.setAttribute('data-theme', 'dark')
-            localStorage.setItem('theme', 'dark')
-        } else {
-            document.documentElement.setAttribute('data-theme', 'light')
-            localStorage.setItem('theme', 'light')
-        }
-    })
+
+
+const main = () => {
+    clock()
+    userPreferences()
+    watchPosition()
 }
+
 main()

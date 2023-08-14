@@ -74,7 +74,7 @@ body {
     background: var(--pointer-color);
     border-radius: 0 50% 0 50%;
     transform: rotate(-90deg);
-    box-shadow: 5px 5px 5px var(--shadow-color);
+    /* box-shadow: 5px 5px 5px var(--shadow-color); */
     /* Centering + Rotation */
     transform-origin: left;
     /* Ensure rotation happens around the center */
