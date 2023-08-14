@@ -31,7 +31,6 @@ const userPreferences = () => {
 }
 
 const setStats = (coords) => {
-    console.log(coords)
     document.getElementById('latitude').innerHTML = coords?.latitude ?? '--'
     document.getElementById('longitude').innerHTML = coords?.longitude ?? '--'
     document.getElementById('speed').innerHTML = `${speed(coords?.speed)} mph`
@@ -68,7 +67,7 @@ const degreeToCardinal = (deg) => {
     return direction
 }
 
-const styleCompass = (heading) => {
+const setCompass = (heading) => {
     const compassPointerElement = document.getElementById('compass-pointer')
     compassPointerElement.style.transform = `rotate(${heading - 90}deg)`
 }
@@ -79,16 +78,16 @@ const watchPosition = () => {
         // Request the current location
         navigator.geolocation.watchPosition((position) => {
             setStats(position.coords)
-            styleCompass(position.coords?.heading)
+            setCompass(position.coords?.heading)
         }, (error) => {
             // Error callback
             setStats(null)
-            styleCompass(null)
+            setCompass(null)
             console.error('Error obtaining location: ', error)
         }, { enableHighAccuracy: true })
     } else {
         setStats(null)
-        styleCompass(null)
+        setCompass(null)
         console.error('Geolocation API not supported by this browser.')
     }
 }
