@@ -31,16 +31,16 @@ const userPreferences = () => {
 }
 
 const setStats = (coords) => {
+    console.log(coords)
     document.getElementById('latitude').innerHTML = coords?.latitude ?? '--'
     document.getElementById('longitude').innerHTML = coords?.longitude ?? '--'
     document.getElementById('speed').innerHTML = `${speed(coords?.speed)} mph`
-    // document.getElementById('heading').innerHTML = degreeToCardinal(coords?.heading)
-    document.getElementById('heading').innerHTML = coords?.heading
+    document.getElementById('heading').innerHTML = degreeToCardinal(coords?.heading)
 }
 
 const speed = (speedMPS) => {
     if (speedMPS) {
-        return `${Math.round(coords?.speed * 2.236936)}`
+        return `${Math.round(speedMPS * 2.236936)}`
     } else {
         return '--'
     }
@@ -70,7 +70,6 @@ const degreeToCardinal = (deg) => {
 
 const styleCompass = (heading) => {
     const compassPointerElement = document.getElementById('compass-pointer')
-    compassPointerElement.style.display = heading ? 'block' : 'none'
     compassPointerElement.style.transform = `rotate(${heading - 90}deg)`
 }
 
@@ -80,7 +79,7 @@ const watchPosition = () => {
         // Request the current location
         navigator.geolocation.watchPosition((position) => {
             setStats(position.coords)
-            styleCompass(position.coords.heading)
+            styleCompass(position.coords?.heading)
         }, (error) => {
             // Error callback
             setStats(null)
