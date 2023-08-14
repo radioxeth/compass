@@ -47,6 +47,9 @@ const speed = (speedMPS) => {
 
 const degreeToCardinal = (deg) => {
     let direction = '--'
+    if (!deg) {
+        return direction
+    }
     if ((deg >= 337.5 && deg <= 360) || (deg >= 0 && deg < 22.5)) {
         direction = 'N'
     } else if (deg >= 22.5 && deg < 67.5) {
@@ -70,6 +73,11 @@ const degreeToCardinal = (deg) => {
 const setCompass = (heading) => {
     const compassPointerElement = document.getElementById('compass-pointer')
     compassPointerElement.style.transform = `rotate(${heading - 90}deg)`
+    if (heading) {
+        compassPointerElement.style.display = 'block'
+    } else {
+        compassPointerElement.style.display = 'none'
+    }
 }
 
 const watchPosition = () => {
