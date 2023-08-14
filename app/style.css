@@ -41,6 +41,13 @@ body {
     right: 0;
 }
 
+.compass-accuracy {
+    margin: 5px;
+    position: absolute;
+    top: 50px;
+    right: 0px;
+}
+
 .compass-border {
     position: absolute;
     top: 50%;
@@ -70,15 +77,11 @@ body {
     left: 50%;
     width: 45%;
     height: 1%;
-    /* background-color: transparent; */
     background: var(--pointer-color);
     border-radius: 0 50% 0 50%;
     transform: rotate(-90deg);
-    /* box-shadow: 5px 5px 5px var(--shadow-color); */
     /* Centering + Rotation */
     transform-origin: left;
-    /* Ensure rotation happens around the center */
-
 }
 
 .compass-stats {
@@ -93,6 +96,19 @@ body {
 }
 
 .theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.accuracy-switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.accuracy-switch input {
     opacity: 0;
     width: 0;
     height: 0;
@@ -136,6 +152,7 @@ input:checked+.slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
+
 
 .compass-heading {
     top: 50%;

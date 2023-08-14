@@ -92,7 +92,7 @@ const watchPosition = () => {
             setStats(null)
             setCompass(null)
             console.error('Error obtaining location: ', error)
-        }, { enableHighAccuracy: true })
+        }, { enableHighAccuracy: false })
     } else {
         setStats(null)
         setCompass(null)
