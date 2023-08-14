@@ -2,10 +2,12 @@
 <html lang="en">
 
 <head>
+    <title>Compass</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
-    <title>Empty Page</title>
+    <link rel="manifest" href="manifest.json">
 </head>
 
 <body>
@@ -34,18 +36,15 @@
     </div>
     <div class="compass-theme">
         <div class="theme-switch-wrapper">
-            <label class="theme-switch" for="checkbox">
-                <input type="checkbox" id="checkbox" />
+            <label class="theme-switch" title="Toggle theme" for="theme-checkbox">
+                <input type="checkbox" id="theme-checkbox" />
                 <div class="slider round"></div>
             </label>
         </div>
     </div>
     <div id="compass-border" class="compass-border">
-        <div id="compass-pointer" class="compass-pointer">
-            <!-- <div id="compass-heading" class="compass-heading">
-
-            </div> -->
-        </div>
+        <div id="compass-pointer" class="compass-pointer"></div>
+        <div id="compass-heading" class="compass-heading"></div>
     </div>
     <script src="main.js" lang="js"></script>
 </body>

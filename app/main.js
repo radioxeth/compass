@@ -1,13 +1,15 @@
 const main = () => {
-    navigate()
+    watchPosition()
     userPreferences()
     clock()
 }
 
+const getTime = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
+
 const clock = () => {
-    document.getElementById('time').innerHTML = new Date().toLocaleTimeString()
+    document.getElementById('time').innerHTML = getTime(new Date())
     window.setInterval(() => {
-        document.getElementById('time').innerHTML = new Date().toLocaleTimeString()
+        document.getElementById('time').innerHTML = getTime(new Date())
     }, 1000)
 }
 
@@ -82,16 +84,10 @@ const watchPosition = () => {
     }
 }
 
-const navigate = () => {
-    watchPosition()
-}
-
 const userPreferences = () => {
-    const themeCheckbox = document.getElementById('checkbox')
-
+    const themeCheckbox = document.getElementById('theme-checkbox')
     // Load the saved theme preference, if any
     const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null
-
     if (currentTheme) {
         document.documentElement.setAttribute('data-theme', currentTheme)
         // If the current theme is dark, check the checkbox
