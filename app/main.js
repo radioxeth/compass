@@ -13,7 +13,7 @@ const clock = () => {
     }, 1000)
 }
 
-const setCoords = (coords) => {
+const setStats = (coords) => {
     document.getElementById('latitude').innerHTML = coords?.latitude ?? '--'
     document.getElementById('longitude').innerHTML = coords?.longitude ?? '--'
     document.getElementById('speed').innerHTML = `${speed(coords?.speed)} mph`
@@ -47,22 +47,14 @@ const degreeToCardinal = (deg) => {
     } else if (deg >= 292.5 && deg < 337.5) {
         direction = 'NW'
     }
-
     return direction
 }
 
 
 const styleCompass = (heading) => {
     const compassPointerElement = document.getElementById('compass-pointer')
-    const compassBorderElement = document.getElementById('compass-border')
-    if (heading) {
-        compassPointerElement.style.display = 'block'
-        compassPointerElement.style.transform = `rotate(${heading - 90}deg)`
-        compassBorderElement.innerHTML = degreeToCardinal(heading)
-    } else {
-        compassPointerElement.style.display = 'none'
-        compassBorderElement.innerHTML = '--'
-    }
+    compassPointerElement.style.display = heading ? 'block' : 'none'
+    compassPointerElement.style.transform = `rotate(${heading - 90}deg)`
 }
 
 const watchPosition = () => {
@@ -70,16 +62,17 @@ const watchPosition = () => {
     if ('geolocation' in navigator) {
         // Request the current location
         navigator.geolocation.watchPosition((position) => {
-            setCoords(position.coords)
+            setStats(position.coords)
             styleCompass(position.coords.heading)
         }, (error) => {
             // Error callback
-            setCoords(null)
+            setStats(null)
             styleCompass(null)
             console.error('Error obtaining location: ', error)
         }, { enableHighAccuracy: true })
     } else {
-        setCoords(null)
+        setStats(null)
+        styleCompass(null)
         console.error('Geolocation API not supported by this browser.')
     }
 }
@@ -87,7 +80,7 @@ const watchPosition = () => {
 const userPreferences = () => {
     const themeCheckbox = document.getElementById('theme-checkbox')
     // Load the saved theme preference, if any
-    const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null
+    const currentTheme = localStorage.getItem('theme') ?? null
     if (currentTheme) {
         document.documentElement.setAttribute('data-theme', currentTheme)
         // If the current theme is dark, check the checkbox
@@ -95,7 +88,6 @@ const userPreferences = () => {
             themeCheckbox.checked = true
         }
     }
-
     // Listen for changes on the checkbox to toggle between themes
     themeCheckbox.addEventListener('change', (e) => {
         if (e.target.checked) {
@@ -107,9 +99,4 @@ const userPreferences = () => {
         }
     })
 }
-window.addEventListener("load", function () {
-    setTimeout(() => {
-        window.scrollTo(0, 1);
-    }, 0);
-});
 main()
