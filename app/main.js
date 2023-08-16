@@ -69,10 +69,19 @@ const degreeToCardinal = (deg) => {
     }
     return direction
 }
+let time = Date.now()
+
+const startTimer = () => {
+
+}
 
 const setCompass = (heading) => {
+
+
     const compassPointerElement = document.getElementById('compass-pointer')
+    compassPointerElement.style.transition = `transform ${Date.now() - time}`
     compassPointerElement.style.transform = `rotate(${heading - 90}deg)`
+    time = Date.now()
     if (heading) {
         compassPointerElement.style.display = 'block'
     } else {

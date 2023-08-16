@@ -7,7 +7,9 @@
     --compass-color: #2e0060; */
     --pointer-color: #000000;
     --compass-color: #000000;
-    --shadow-color: rgba(0, 0, 0, 0.3);
+
+    --shadow-color: rgb(40, 204, 13, 0.3);
+    /* --shadow-color: rgba(0, 0, 0, 0.3); */
 }
 
 [data-theme="dark"] {
@@ -17,7 +19,8 @@
     --compass-color: #ffffff;
     /* --pointer-color: #00ccff;
     --compass-color: #006680; */
-    --shadow-color: rgba(255, 255, 255, 0.3);
+    --shadow-color: rgb(40, 204, 13, 0.3);
+    /* --shadow-color: rgba(255, 255, 255, 0.3); */
     /* Add more dark theme specific variables */
 }
 
@@ -132,7 +135,7 @@ body {
     width: 26px;
     left: 4px;
     bottom: 4px;
-    background-color: #2196F3;
+    background-color: rgb(40, 204, 13);
     transition: .4s;
 }
 
@@ -152,7 +155,6 @@ input:checked+.slider:before {
 .slider.round:before {
     border-radius: 50%;
 }
-
 
 .compass-heading {
     top: 50%;
