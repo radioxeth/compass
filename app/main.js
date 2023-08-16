@@ -79,7 +79,7 @@ const setCompass = (heading) => {
 
 
     const compassPointerElement = document.getElementById('compass-pointer')
-    compassPointerElement.style.transition = `transform ${(Date.now() - time) / 1000}`
+    compassPointerElement.style.transition = `transform ${.5}`
 
     compassPointerElement.style.transform = `rotate(${heading - 90}deg)`
     console.log(Date.now(), time)
@@ -95,15 +95,18 @@ const watchPosition = () => {
     // Check if Geolocation API is supported by the browser
     if ('geolocation' in navigator) {
         // Request the current location
-        navigator.geolocation.watchPosition((position) => {
-            setStats(position.coords)
-            setCompass(position.coords?.heading)
-        }, (error) => {
-            // Error callback
-            setStats(null)
-            setCompass(null)
-            console.error('Error obtaining location: ', error)
-        }, { enableHighAccuracy: true })
+        setInterval(() => {
+            navigator.geolocation.getCurrentPosition((position) => {
+                setStats(position.coords)
+                setCompass(position.coords?.heading)
+            }, (error) => {
+                // Error callback
+                setStats(null)
+                setCompass(null)
+                console.error('Error obtaining location: ', error)
+            }, { enableHighAccuracy: true })
+        }, 500);
+
     } else {
         setStats(null)
         setCompass(null)
