@@ -79,12 +79,14 @@ const setCompass = (heading) => {
 
 
     const compassPointerElement = document.getElementById('compass-pointer')
-    compassPointerElement.style.transition = `transform ${Date.now() - time}`
+    compassPointerElement.style.transition = `transform ${(Date.now() - time) / 1000}`
+
     compassPointerElement.style.transform = `rotate(${heading - 90}deg)`
+    console.log(Date.now(), time)
     time = Date.now()
-    if (heading) {
+    if (heading && compassPointerElement.style.display === 'none') {
         compassPointerElement.style.display = 'block'
-    } else {
+    } else if (!heading && compassPointerElement.style.display === 'block') {
         compassPointerElement.style.display = 'none'
     }
 }
