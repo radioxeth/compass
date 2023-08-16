@@ -1,5 +1,8 @@
 const getTime = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
 
+const getRandomBetween0And360 = () => Math.floor(Math.random() * 361)
+const getRandomBetween0And90 = () => Math.floor(Math.random() * 91)
+
 const clock = () => {
     document.getElementById('time').innerHTML = getTime(new Date())
     window.setInterval(() => {
@@ -70,19 +73,12 @@ const degreeToCardinal = (deg) => {
     return direction
 }
 let time = Date.now()
-
-const startTimer = () => {
-
-}
-
 const setCompass = (heading) => {
 
-
     const compassPointerElement = document.getElementById('compass-pointer')
-    compassPointerElement.style.transition = `transform ${.5}s`
-
-    compassPointerElement.style.transform = `rotate(${heading - 90}deg)`
-    console.log(Date.now(), time)
+    compassPointerElement.style.transition = `transform ${(Date.now() - time) / 1000}s`
+    // heading = getRandomBetween0And360()
+    compassPointerElement.style.transform = `rotate(${heading - 90}deg)`;
     time = Date.now()
     if (heading) {
         compassPointerElement.style.display = 'block'
@@ -105,7 +101,7 @@ const watchPosition = () => {
         //         setCompass(null)
         //         console.error('Error obtaining location: ', error)
         //     }, { enableHighAccuracy: true })
-        // }, 500);
+        // }, 2000);
         navigator.geolocation.watchPosition((position) => {
             setStats(position.coords)
             setCompass(position.coords?.heading)
@@ -131,3 +127,20 @@ const main = () => {
 }
 
 main()
+
+// current position = 0
+
+// first heading is 90
+// rotate 90 from 0(heading - current)
+// current position is 90
+
+// second heading is 30
+// rotate - 60 from 90(heading - current)
+// current position is 30
+
+// third heading is 45
+// rotate 15 from 30
+// current position is 45
+
+
+// currentPosition - heading = rotate

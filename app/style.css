@@ -1,15 +1,12 @@
 :root {
-    /* Set the custom property size to the smaller of vw or vh */
     --size: calc(min(100vw, 100vh) * 0.98);
     --background-color: #ffffff;
     --text-color: #000000;
-    /* --pointer-color: #3e0080;
-    --compass-color: #2e0060; */
     --pointer-color: #000000;
     --compass-color: #000000;
 
-    --shadow-color: rgb(40, 204, 13, 0.3);
-    /* --shadow-color: rgba(0, 0, 0, 0.3); */
+    --shadow-color: rgb(40, 204, 13, 1);
+    --cardinal-major-color: rgb(40, 204, 13, 1);
 }
 
 [data-theme="dark"] {
@@ -17,11 +14,9 @@
     --text-color: #ffffff;
     --pointer-color: #ffffff;
     --compass-color: #ffffff;
-    /* --pointer-color: #00ccff;
-    --compass-color: #006680; */
-    --shadow-color: rgb(40, 204, 13, 0.3);
-    /* --shadow-color: rgba(255, 255, 255, 0.3); */
-    /* Add more dark theme specific variables */
+
+    --shadow-color: rgb(40, 204, 13, 1);
+    --cardinal-major-color: rgb(40, 204, 13, 1);
 }
 
 body {
@@ -63,15 +58,53 @@ body {
     border: 5px solid var(--compass-color);
     box-sizing: border-box;
     transform: translate(-50%, -50%);
-    box-shadow: 0px 0px 25px 15px var(--shadow-color);
-
+    box-shadow: 0px 0px 25px 5px var(--shadow-color);
     display: flex;
     justify-content: center;
     align-items: center;
-
     /* Optional: text styling */
     font-size: 12em;
     text-align: center;
+}
+
+.cardinal-north {
+    position: absolute;
+    top: 1px;
+    left: 50%;
+    border: 2px solid var(--cardinal-major-color);
+    width: 0px;
+    height: 20px;
+    border-radius: 10px;
+}
+
+.cardinal-south {
+    position: absolute;
+    bottom: 1px;
+    left: 50%;
+    border: 2px solid var(--pointer-color);
+    width: 0px;
+    height: 20px;
+    border-radius: 10px;
+}
+
+.cardinal-east {
+    position: absolute;
+    top: 50%;
+    right: 1px;
+    border: 2px solid var(--pointer-color);
+    width: 20px;
+    height: 0px;
+    border-radius: 10px;
+}
+
+.cardinal-west {
+    position: absolute;
+    top: 50%;
+    left: 1px;
+    border: 2px solid var(--pointer-color);
+    width: 20px;
+    height: 0px;
+    border-radius: 10px;
 }
 
 .compass-pointer {
@@ -82,9 +115,9 @@ body {
     height: 1%;
     background: var(--pointer-color);
     border-radius: 0 50% 0 50%;
-    transform: rotate(-90deg);
     /* Centering + Rotation */
     transform-origin: left;
+    display: none;
 }
 
 .compass-stats {
