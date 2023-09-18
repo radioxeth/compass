@@ -11,28 +11,20 @@
 </head>
 
 <body>
-    <div class="compass-stats">
+    <div class="compass-stats-ul">
         <table>
             <tr>
-                <td colspan="2"><span id="time"></span></td>
-            </tr>
-            <tr>
-                <td>Latitude</td>
                 <td><span id="latitude">--</span></td>
-            </tr>
-            <tr>
-                <td>Longitude</td>
                 <td><span id="longitude">--</span></td>
             </tr>
             <tr>
-                <td>Speed</td>
-                <td><span id="speed">--</span></td>
-            </tr>
-            <tr>
-                <td>Heading</td>
-                <td><span id="heading">--</span></td>
+                <td colspan="2"><span id="time"></span></td>
             </tr>
         </table>
+    </div>
+    <div id="compass-bearing-top" class="compass-bearing-top"></div>
+    <div id="compass-stats-bl" class="compass-stats-bl">
+        <span id="heading">--</span> @ <span id="speed">-- mph</span>
     </div>
     <div class="compass-theme">
         <div class="theme-switch-wrapper">
@@ -42,13 +34,27 @@
             </label>
         </div>
     </div>
-    <div id="compass-border" class="compass-border">
-        <div id="compass-pointer" class="compass-pointer"></div>
-        <div class="cardinal-north"></div>
-        <div class="cardinal-south"></div>
-        <div class="cardinal-east"></div>
-        <div class="cardinal-west"></div>
+
+    <div class="pointer-toggle">
+        <div class="pointer-switch-wrapper">
+            <label class="pointer-switch" title="Toggle pointer" for="pointer-checkbox">
+                <input type="checkbox" id="pointer-checkbox" />
+                <div class="slider round"></div>
+            </label>
+        </div>
     </div>
+    <div class="container">
+
+        <div id="compass-border" class="compass-border">
+            <div id="compass-pointer" class="compass-pointer"></div>
+            <div class="cardinal-north"></div>
+            <div class="cardinal-south"></div>
+            <div class="cardinal-east"></div>
+            <div class="cardinal-west"></div>
+        </div>
+
+    </div>
+
     <script src="main.js" lang="js"></script>
 </body>
 

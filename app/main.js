@@ -1,7 +1,8 @@
+let isPointerFixed = false
+let isTesting = false
 const getTime = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
 
 const getRandomBetween0And360 = () => Math.floor(Math.random() * 361)
-const getRandomBetween0And90 = () => Math.floor(Math.random() * 91)
 
 const clock = () => {
     document.getElementById('time').innerHTML = getTime(new Date())
@@ -31,6 +32,18 @@ const userPreferences = () => {
             localStorage.setItem('theme', 'light')
         }
     })
+
+    const pointerCheckbox = document.getElementById('pointer-checkbox')
+    // Listen for changes on the checkbox to toggle between themes
+    pointerCheckbox.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            localStorage.setItem('pointer-fixed', true)
+            isPointerFixed = true
+        } else {
+            localStorage.setItem('pointer-fixed', false)
+            isPointerFixed = false
+        }
+    })
 }
 
 const setStats = (coords) => {
@@ -53,7 +66,7 @@ const degreeToCardinal = (deg) => {
     if (!deg) {
         return direction
     }
-    if ((deg >= 337.5 && deg <= 360) || (deg >= 0 && deg < 22.5)) {
+    if ((deg >= 337.5 && deg <= 360) || (deg >= 0 && deg < 22.5) || (deg === 0)) {
         direction = 'N'
     } else if (deg >= 22.5 && deg < 67.5) {
         direction = 'NE'
@@ -74,43 +87,59 @@ const degreeToCardinal = (deg) => {
 }
 let time = Date.now()
 const setCompass = (heading) => {
+    const pointerSign = isPointerFixed ? 1 : -1
+    const borderSign = isPointerFixed ? 0 : 1
+    const compassBorderElement = document.getElementById('compass-border')
+    compassBorderElement.style.transition = `transform ${(Date.now() - time) / 1000}s`
+    compassBorderElement.style.transform = `rotate(${borderSign * heading}deg)`;
 
     const compassPointerElement = document.getElementById('compass-pointer')
     compassPointerElement.style.transition = `transform ${(Date.now() - time) / 1000}s`
-    // heading = getRandomBetween0And360()
-    compassPointerElement.style.transform = `rotate(${heading - 90}deg)`;
+    compassPointerElement.style.transform = `rotate(${pointerSign * heading}deg)`;
     time = Date.now()
-    if (heading) {
-        compassPointerElement.style.display = 'block'
-    } else {
-        compassPointerElement.style.display = 'none'
-    }
+}
+
+const setCompassBearing = (heading) => {
+    const headingElement = document.getElementById('compass-bearing-top')
+    headingElement.innerHTML = `${Math.round(heading * 10) / 10}&deg;|${degreeToCardinal(heading)}`
 }
 
 const watchPosition = () => {
     // Check if Geolocation API is supported by the browser
     if ('geolocation' in navigator) {
         // Request the current location
-        // setInterval(() => {
-        //     navigator.geolocation.getCurrentPosition((position) => {
-        //         setStats(position.coords)
-        //         setCompass(position.coords?.heading)
-        //     }, (error) => {
-        //         // Error callback
-        //         setStats(null)
-        //         setCompass(null)
-        //         console.error('Error obtaining location: ', error)
-        //     }, { enableHighAccuracy: true })
-        // }, 2000);
-        navigator.geolocation.watchPosition((position) => {
-            setStats(position.coords)
-            setCompass(position.coords?.heading)
-        }, (error) => {
-            // Error callback
-            setStats(null)
-            setCompass(null)
-            console.error('Error obtaining location: ', error)
-        }, { enableHighAccuracy: true })
+        setInterval(() => {
+            navigator.geolocation.getCurrentPosition((position) => {
+                if (isTesting) {
+                    const heading = getRandomBetween0And360()
+                    const tempPosition = {
+                        timestamp: position.timestamp,
+                        coords: {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            altitude: position.coords.altitude,
+                            accuracy: position.coords.accuracy,
+                            altitudeAccuracy: position.coords.altitudeAccuracy,
+                            heading: heading,  // Overwrite the heading
+                            speed: position.coords.speed
+                        }
+                    }
+                    setStats(tempPosition.coords)
+                    setCompass(tempPosition.coords?.heading)
+                    setCompassBearing(tempPosition.coords?.heading)
+                } else {
+                    setStats(position.coords)
+                    setCompass(position.coords?.heading)
+                    setCompassBearing(position.coords?.heading)
+                }
+            }, (error) => {
+                // Error callback
+                setStats(null)
+                setCompass(null)
+                setCompassBearing(null)
+                console.error('Error obtaining location: ', error)
+            }, { enableHighAccuracy: true })
+        }, 1000);
     } else {
         setStats(null)
         setCompass(null)
@@ -118,12 +147,33 @@ const watchPosition = () => {
     }
 }
 
-
+const minorTicks = () => {
+    const compassBorderElement = document.getElementById('compass-border')
+    const compassBorderRadius = compassBorderElement.offsetWidth / 2
+    let degrees = 0
+    while (degrees < 360) {
+        if (![0, 90, 180, 270].includes(degrees)) {
+            const tickSize = degrees % 2 === 0 ? 10 : 5
+            const tick = document.createElement('div')
+            tick.setAttribute('class', `minor-tick-${tickSize}`)
+            tick.setAttribute('id', `tick-${degrees}`)
+            // tick.innerText = degrees
+            const radians = degrees * (Math.PI / 180)
+            const x = (compassBorderRadius - 15) * Math.cos(radians)
+            const y = (compassBorderRadius - 15) * Math.sin(radians)
+            tick.style.transform = `translate(${x}px, ${y}px) rotate(${degrees}deg)`
+            // tick.style.transform = `rotate(${degrees}deg)`
+            compassBorderElement.appendChild(tick)
+        }
+        degrees += 5
+    }
+}
 
 const main = () => {
     clock()
     userPreferences()
     watchPosition()
+    minorTicks()
 }
 
 main()
