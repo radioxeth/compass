@@ -107,39 +107,53 @@ const setCompassBearing = (heading) => {
 const watchPosition = () => {
     // Check if Geolocation API is supported by the browser
     if ('geolocation' in navigator) {
+
         // Request the current location
-        setInterval(() => {
-            navigator.geolocation.getCurrentPosition((position) => {
-                if (isTesting) {
-                    const heading = getRandomBetween0And360()
-                    const tempPosition = {
-                        timestamp: position.timestamp,
-                        coords: {
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude,
-                            altitude: position.coords.altitude,
-                            accuracy: position.coords.accuracy,
-                            altitudeAccuracy: position.coords.altitudeAccuracy,
-                            heading: heading,  // Overwrite the heading
-                            speed: position.coords.speed
+        if (isTesting) {
+            setInterval(() => {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    if (isTesting) {
+                        const heading = getRandomBetween0And360()
+                        const tempPosition = {
+                            timestamp: position.timestamp,
+                            coords: {
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude,
+                                altitude: position.coords.altitude,
+                                accuracy: position.coords.accuracy,
+                                altitudeAccuracy: position.coords.altitudeAccuracy,
+                                heading: heading,  // Overwrite the heading
+                                speed: position.coords.speed
+                            }
                         }
+                        setStats(tempPosition.coords)
+                        setCompass(tempPosition.coords?.heading)
+                        setCompassBearing(tempPosition.coords?.heading)
+                    } else {
+
                     }
-                    setStats(tempPosition.coords)
-                    setCompass(tempPosition.coords?.heading)
-                    setCompassBearing(tempPosition.coords?.heading)
-                } else {
-                    setStats(position.coords)
-                    setCompass(position.coords?.heading)
-                    setCompassBearing(position.coords?.heading)
-                }
+                }, (error) => {
+                    // Error callback
+                    setStats(null)
+                    setCompass(null)
+                    setCompassBearing(null)
+                    console.error('Error obtaining location: ', error)
+                }, { enableHighAccuracy: true })
+            }, 3000);
+        } else {
+            navigator.geolocation.watchPosition((position) => {
+                setStats(position.coords)
+                setCompass(position.coords?.heading)
+                setCompassBearing(position.coords?.heading)
             }, (error) => {
                 // Error callback
                 setStats(null)
                 setCompass(null)
-                setCompassBearing(null)
                 console.error('Error obtaining location: ', error)
             }, { enableHighAccuracy: true })
-        }, 1000);
+        }
+
+
     } else {
         setStats(null)
         setCompass(null)
