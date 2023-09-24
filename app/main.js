@@ -63,10 +63,10 @@ const speed = (speedMPS) => {
 
 const degreeToCardinal = (deg) => {
     let direction = '--'
-    if (!deg) {
+    if (deg === null) {
         return direction
     }
-    if ((deg >= 337.5 && deg <= 360) || (deg >= 0 && deg < 22.5) || (deg === 0)) {
+    if ((deg >= 337.5 && deg <= 360) || (deg >= 0 && deg < 22.5)) {
         direction = 'N'
     } else if (deg >= 22.5 && deg < 67.5) {
         direction = 'NE'
@@ -85,53 +85,52 @@ const degreeToCardinal = (deg) => {
     }
     return direction
 }
+
 let time = Date.now()
 const setCompass = (heading) => {
-    const pointerSign = isPointerFixed ? 1 : -1
-    const borderSign = isPointerFixed ? 0 : 1
+    const transitionStyle = `transform ${(Date.now() - time) / 1000}s`
+
+    const borderSign = isPointerFixed ? -1 : 0
     const compassBorderElement = document.getElementById('compass-border')
-    compassBorderElement.style.transition = `transform ${(Date.now() - time) / 1000}s`
+    compassBorderElement.style.transition = transitionStyle
     compassBorderElement.style.transform = `rotate(${borderSign * heading}deg)`;
 
+    const pointerSign = isPointerFixed ? 1 : 1
     const compassPointerElement = document.getElementById('compass-pointer')
-    compassPointerElement.style.transition = `transform ${(Date.now() - time) / 1000}s`
+    compassPointerElement.style.transition = transitionStyle
     compassPointerElement.style.transform = `rotate(${pointerSign * heading}deg)`;
     time = Date.now()
 }
 
 const setCompassBearing = (heading) => {
     const headingElement = document.getElementById('compass-bearing-top')
-    headingElement.innerHTML = `${Math.round(heading * 10) / 10}&deg;|${degreeToCardinal(heading)}`
+    headingElement.innerHTML = `${Math.round(heading * 10) / 10}&deg; ${degreeToCardinal(heading)}`
 }
 
 const watchPosition = () => {
     // Check if Geolocation API is supported by the browser
     if ('geolocation' in navigator) {
-
         // Request the current location
         if (isTesting) {
             setInterval(() => {
                 navigator.geolocation.getCurrentPosition((position) => {
-                    if (isTesting) {
-                        const heading = getRandomBetween0And360()
-                        const tempPosition = {
-                            timestamp: position.timestamp,
-                            coords: {
-                                latitude: position.coords.latitude,
-                                longitude: position.coords.longitude,
-                                altitude: position.coords.altitude,
-                                accuracy: position.coords.accuracy,
-                                altitudeAccuracy: position.coords.altitudeAccuracy,
-                                heading: heading,  // Overwrite the heading
-                                speed: position.coords.speed
-                            }
+                    let heading = getRandomBetween0And360()
+                    const tempPosition = {
+                        timestamp: position.timestamp,
+                        coords: {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            altitude: position.coords.altitude,
+                            accuracy: position.coords.accuracy,
+                            altitudeAccuracy: position.coords.altitudeAccuracy,
+                            heading: heading,  // Overwrite the heading
+                            speed: position.coords.speed
                         }
-                        setStats(tempPosition.coords)
-                        setCompass(tempPosition.coords?.heading)
-                        setCompassBearing(tempPosition.coords?.heading)
-                    } else {
-
                     }
+                    setStats(tempPosition.coords)
+                    setCompass(tempPosition.coords?.heading)
+                    setCompassBearing(tempPosition.coords?.heading)
+                    currentHeading = heading
                 }, (error) => {
                     // Error callback
                     setStats(null)
@@ -149,6 +148,7 @@ const watchPosition = () => {
                 // Error callback
                 setStats(null)
                 setCompass(null)
+                setCompassBearing(null)
                 console.error('Error obtaining location: ', error)
             }, { enableHighAccuracy: true })
         }
@@ -157,6 +157,7 @@ const watchPosition = () => {
     } else {
         setStats(null)
         setCompass(null)
+        setCompassBearing(null)
         console.error('Geolocation API not supported by this browser.')
     }
 }
@@ -184,6 +185,9 @@ const minorTicks = () => {
 }
 
 const main = () => {
+    setCompass(null)
+    setCompassBearing(null)
+    setStats(null)
     clock()
     userPreferences()
     watchPosition()

@@ -86,6 +86,12 @@ body {
     width: 100vw;
 }
 
+.cardinal-letter {
+    position: absolute;
+    font-size: 20px;
+    left: -50;
+}
+
 .cardinal-north {
     position: absolute;
     top: 1px;
