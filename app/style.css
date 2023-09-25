@@ -90,6 +90,36 @@ body {
     position: absolute;
     font-size: 20px;
     left: -50;
+
+
+}
+
+.n {
+    transform-origin: 0 0;
+    transform: rotate(0deg);
+    left: -10px;
+    top: 20px
+}
+
+.e {
+    transform-origin: 0 0;
+    transform: rotate(90deg);
+    left: 0px;
+    top: -10px;
+}
+
+.s {
+    transform-origin: 0 0;
+    transform: rotate(180deg);
+    left: 10px;
+    top: 0px;
+}
+
+.w {
+    transform-origin: 0 0;
+    transform: rotate(270deg);
+    top: 10px;
+    left: 20px;
 }
 
 .cardinal-north {
