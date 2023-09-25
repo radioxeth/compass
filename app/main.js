@@ -1,5 +1,5 @@
 let isPointerFixed = false
-let isTesting = true
+let isTesting = false
 const getTime = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
 
 const getRandomBetween0And360 = () => Math.floor(Math.random() * 361)
