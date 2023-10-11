@@ -195,7 +195,7 @@ body {
     bottom: 0px;
     left: 0px;
     margin: 5px;
-    font-size: larger;
+
 }
 
 .compass-stats-ul {
@@ -203,6 +203,7 @@ body {
     top: 0px;
     left: 0px;
     margin: 5px;
+    font-size: larger;
 }
 
 .compass-stats {
