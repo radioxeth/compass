@@ -1,6 +1,6 @@
 {
-    "short_name": "App Name",
-    "name": "Full App Name",
+    "short_name": "compass",
+    "name": "compass",
     "display": "standalone",
     "start_url": "/"
 }

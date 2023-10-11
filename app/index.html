@@ -11,21 +11,24 @@
 </head>
 
 <body>
-    <div class="compass-stats-ul">
+    <div id="compass-stats-ul" class="compass-stats-ul">
+        <span id="heading">--</span> @ <span id="speed">-- mph</span>
+    </div>
+
+    <div id="compass-bearing-top" class="compass-bearing-top"></div>
+
+    <div class="compass-stats-bl">
         <table>
+            <tr>
+                <td colspan="2"><span id="time"></span></td>
+            </tr>
             <tr>
                 <td><span id="latitude">--</span></td>
                 <td><span id="longitude">--</span></td>
             </tr>
-            <tr>
-                <td colspan="2"><span id="time"></span></td>
-            </tr>
         </table>
     </div>
-    <div id="compass-bearing-top" class="compass-bearing-top"></div>
-    <div id="compass-stats-bl" class="compass-stats-bl">
-        <span id="heading">--</span> @ <span id="speed">-- mph</span>
-    </div>
+
     <div class="compass-theme">
         <div class="theme-switch-wrapper">
             <label class="theme-switch" title="Toggle theme" for="theme-checkbox">

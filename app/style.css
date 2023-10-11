@@ -198,6 +198,13 @@ body {
     font-size: larger;
 }
 
+.compass-stats-ul {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    margin: 5px;
+}
+
 .compass-stats {
     margin: 5px;
 }
