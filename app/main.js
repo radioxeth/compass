@@ -1,4 +1,4 @@
-let isPointerFixed = true
+let isPointerFixed = false
 let isTesting = false
 const getTime = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
 
@@ -34,15 +34,19 @@ const userPreferences = () => {
     })
 
     const pointerCheckbox = document.getElementById('pointer-checkbox')
+    // load the saved pointer preferences, if any
+    const currentPointer = localStorage.getItem('pointer-fixed') ?? null
+    if (currentPointer) {
+        // If the current pointer is true, set to true
+        const isCurrentPointerFixed = currentPointer === 'true' ? true : false
+        pointerCheckbox.checked = isCurrentPointerFixed
+        isPointerFixed = isCurrentPointerFixed
+    }
+
     // Listen for changes on the checkbox to toggle between themes
     pointerCheckbox.addEventListener('change', (e) => {
-        if (e.target.checked) {
-            localStorage.setItem('pointer-fixed', true)
-            isPointerFixed = true
-        } else {
-            localStorage.setItem('pointer-fixed', false)
-            isPointerFixed = false
-        }
+        isPointerFixed = e.target.checked
+        localStorage.setItem('pointer-fixed', isPointerFixed)
     })
 }
 
@@ -185,30 +189,13 @@ const minorTicks = () => {
 }
 
 const main = () => {
+    userPreferences()
     setCompass(null)
     setCompassBearing(null)
     setStats(null)
     clock()
-    userPreferences()
     watchPosition()
     minorTicks()
 }
 
 main()
-
-// current position = 0
-
-// first heading is 90
-// rotate 90 from 0(heading - current)
-// current position is 90
-
-// second heading is 30
-// rotate - 60 from 90(heading - current)
-// current position is 30
-
-// third heading is 45
-// rotate 15 from 30
-// current position is 45
-
-
-// currentPosition - heading = rotate
