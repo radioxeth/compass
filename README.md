@@ -8,3 +8,5 @@ $ node server.js
 ```
 http://localhost:5000
 
+## Production
+https://compass.nad27.net
