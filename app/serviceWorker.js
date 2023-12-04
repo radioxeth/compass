@@ -7,9 +7,7 @@ const urlsToCache = [
 
 const addResourcesToCache = async (resources) => {
     const cache = await caches.open(CACHE_NAME)
-    console.log('Opened cache')
     await cache.addAll(resources)
-    console.log('Resources added to cache')
 }
 
 
