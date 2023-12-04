@@ -54,7 +54,6 @@ const setStats = (coords) => {
     document.getElementById('latitude').innerHTML = coords?.latitude ?? '--'
     document.getElementById('longitude').innerHTML = coords?.longitude ?? '--'
     document.getElementById('speed').innerHTML = `${speed(coords?.speed)} mph`
-    document.getElementById('heading').innerHTML = degreeToCardinal(coords?.heading)
 }
 
 const speed = (speedMPS) => {
@@ -166,27 +165,68 @@ const watchPosition = () => {
     }
 }
 
-const minorTicks = () => {
+const setTicks = () => {
     const compassBorderElement = document.getElementById('compass-border')
     const compassBorderRadius = compassBorderElement.offsetWidth / 2
     let degrees = 0
     while (degrees < 360) {
+        const tickElement = document.createElement('div')
         if (![0, 90, 180, 270].includes(degrees)) {
             const tickSize = degrees % 2 === 0 ? 10 : 5
-            const tick = document.createElement('div')
-            tick.setAttribute('class', `minor-tick-${tickSize}`)
-            tick.setAttribute('id', `tick-${degrees}`)
-            // tick.innerText = degrees
-            const radians = degrees * (Math.PI / 180)
-            const x = (compassBorderRadius - 15) * Math.cos(radians)
-            const y = (compassBorderRadius - 15) * Math.sin(radians)
-            tick.style.transform = `translate(${x}px, ${y}px) rotate(${degrees}deg)`
-            // tick.style.transform = `rotate(${degrees}deg)`
-            compassBorderElement.appendChild(tick)
+            tickElement.setAttribute('class', `minor-tick-${tickSize}`)
+        } else if (degrees === 270) {
+            tickElement.setAttribute('class', `major-tick-15-N`)
+            const cardinal = document.createElement('div')
+            cardinal.setAttribute('class', 'n')
+            cardinal.innerHTML = 'N'
+            tickElement.appendChild(cardinal)
+        } else if (degrees === 0) {
+            tickElement.setAttribute('class', `major-tick-15`)
+            const cardinal = document.createElement('div')
+            cardinal.setAttribute('class', 'e')
+            cardinal.innerHTML = 'E'
+            tickElement.appendChild(cardinal)
+        } else if (degrees === 90) {
+            tickElement.setAttribute('class', `major-tick-15`)
+            const cardinal = document.createElement('div')
+            cardinal.setAttribute('class', 's')
+            cardinal.innerHTML = 'S'
+            tickElement.appendChild(cardinal)
+        } else if (degrees === 180) {
+            tickElement.setAttribute('class', `major-tick-15`)
+            const cardinal = document.createElement('div')
+            cardinal.setAttribute('class', 'w')
+            cardinal.innerHTML = 'W'
+            tickElement.appendChild(cardinal)
         }
+        const radians = degrees * (Math.PI / 180)
+        const x = (compassBorderRadius - 15) * Math.cos(radians)
+        const y = (compassBorderRadius - 15) * Math.sin(radians)
+        tickElement.style.transform = `translate(${x}px, ${y}px) rotate(${degrees}deg)`
+        tickElement.setAttribute('id', `tick-${degrees}`)
+
+        compassBorderElement.appendChild(tickElement)
+        degrees += 5
+    }
+    window.onresize = resizeTicks
+}
+
+const resizeTicks = () => {
+    let degrees = 0
+    const compassBorderElement = document.getElementById('compass-border')
+    const compassBorderRadius = compassBorderElement.offsetWidth / 2
+    while (degrees < 360) {
+        const tickElement = document.getElementById(`tick-${degrees}`)
+
+        const radians = degrees * (Math.PI / 180)
+        const x = (compassBorderRadius - 15) * Math.cos(radians)
+        const y = (compassBorderRadius - 15) * Math.sin(radians)
+        tickElement.style.transform = `translate(${x}px, ${y}px) rotate(${degrees}deg)`
         degrees += 5
     }
 }
+
+
 
 const registerServiceWorker = async () => {
     if ("serviceWorker" in navigator) {
@@ -215,7 +255,7 @@ const main = () => {
     setStats(null)
     clock()
     watchPosition()
-    minorTicks()
+    setTicks()
     registerServiceWorker()
 }
 

@@ -1,5 +1,5 @@
 :root {
-    --size: calc(min(75vw, 75vh));
+    --size: calc(min(90vw, 90vh));
 
     --background-color: #ffffff;
     --text-color: #000000;
@@ -9,6 +9,7 @@
     --shadow-color: #000000;
     --cardinal-major-color: rgb(40, 204, 13, 1);
     --minor-tick-color: rgb(0, 0, 0, .5);
+    --major-tick-color: rgb(0, 0, 0, 1);
 }
 
 [data-theme="dark"] {
@@ -20,6 +21,7 @@
     --shadow-color: #ffffff;
     --cardinal-major-color: rgb(40, 204, 13, 1);
     --minor-tick-color: rgb(255, 255, 255, .5);
+    --major-tick-color: rgb(255, 255, 255, 1);
 }
 
 body {
@@ -57,6 +59,14 @@ body {
     }
 }
 
+.compass-bearing-top {
+    position: absolute;
+    text-align: center;
+    width: 100vw;
+    font-size: xx-large;
+    /* top: 47.5vh; */
+}
+
 .compass-pointer {
     width: 5px;
     height: 100%;
@@ -71,7 +81,7 @@ body {
     border-radius: 50%;
     border: 5px solid var(--compass-color);
     box-sizing: border-box;
-    box-shadow: 0px 0px 25px var(--shadow-color);
+    box-shadow: 0px 0px 15px var(--shadow-color);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -79,87 +89,62 @@ body {
     text-align: center;
 }
 
-.compass-bearing-top {
-    position: absolute;
-    text-align: center;
-    top: 10px;
-    width: 100vw;
-}
-
 .cardinal-letter {
     position: absolute;
     font-size: 20px;
     left: -50;
-
-
 }
 
 .n {
+    position: relative;
     transform-origin: 0 0;
-    transform: rotate(0deg);
-    left: -10px;
-    top: 20px
+    transform: rotate(90deg);
+    font-size: 30px;
+    top: 6px;
 }
 
 .e {
+    position: relative;
     transform-origin: 0 0;
     transform: rotate(90deg);
-    left: 0px;
+    font-size: 30px;
     top: -10px;
 }
 
 .s {
+    position: relative;
     transform-origin: 0 0;
-    transform: rotate(180deg);
-    left: 10px;
-    top: 0px;
+    transform: rotate(90deg);
+    font-size: 30px;
+    top: -10px;
 }
 
 .w {
+    position: relative;
     transform-origin: 0 0;
-    transform: rotate(270deg);
-    top: 10px;
-    left: 20px;
+    transform: rotate(90deg);
+    font-size: 30px;
+    top: -15px;
 }
 
-.cardinal-north {
+.major-tick-15 {
     position: absolute;
-    top: 1px;
-    left: 50%;
+    width: 15px;
+    height: 0px;
+    border: 2px solid var(--major-tick-color);
+    border-radius: 15px;
+}
+
+.major-tick-15-N {
+    position: absolute;
+    width: 15px;
+    height: 0px;
     border: 2px solid var(--cardinal-major-color);
-    width: 0px;
-    height: 20px;
-    border-radius: 10px;
-}
-
-.cardinal-south {
-    position: absolute;
-    bottom: 1px;
-    left: 50%;
-    border: 2px solid var(--pointer-color);
-    width: 0px;
-    height: 20px;
-    border-radius: 10px;
-}
-
-.cardinal-east {
-    position: absolute;
-    top: 50%;
-    right: 1px;
-    border: 2px solid var(--pointer-color);
-    width: 20px;
-    height: 0px;
-    border-radius: 10px;
-}
-
-.cardinal-west {
-    position: absolute;
-    top: 50%;
-    left: 1px;
-    border: 2px solid var(--pointer-color);
-    width: 20px;
-    height: 0px;
-    border-radius: 10px;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .minor-tick-10 {
@@ -174,6 +159,12 @@ body {
     width: 5px;
     height: 0px;
     border: 1px solid var(--minor-tick-color);
+}
+
+.compass-ticks {
+    height: 100%;
+    width: 100%;
+    position: absolute;
 }
 
 .compass-theme {
@@ -195,6 +186,7 @@ body {
     bottom: 0px;
     left: 0px;
     margin: 5px;
+    font-size: x-large;
 }
 
 .compass-stats-ul {
@@ -202,7 +194,7 @@ body {
     top: 0px;
     left: 0px;
     margin: 5px;
-    font-size: larger;
+    font-size: x-large;
 }
 
 .compass-stats {
