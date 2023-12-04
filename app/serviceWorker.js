@@ -1,4 +1,4 @@
-const CACHE_NAME = 'compass-cache-v1'
+const CACHE_NAME = 'compass-cache-v2'
 const urlsToCache = [
     '/',
     '/style.css',
