@@ -1,5 +1,5 @@
 let isPointerFixed = false
-let isTesting = true
+let isTesting = false
 const getTime = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
 
 const getRandomBetween0And360 = () => Math.floor(Math.random() * 361)
@@ -199,22 +199,6 @@ const setTicks = () => {
             cardinal.innerHTML = 'W'
             tickElement.appendChild(cardinal)
         }
-
-
-        // else if (degrees === 0) {
-        //     tickElement.setAttribute('class', `major-tick-15`)
-        //     const cardinal = document.createElement('div')
-        //     cardinal.setAttribute('class', 'n')
-        //     cardinal.innerHTML = 'N'
-        //     tickElement.appendChild(cardinal)
-        // }
-        // else if (degrees === 0) {
-        //     tickElement.setAttribute('class', `major-tick-15`)
-        //     const cardinal = document.createElement('div')
-        //     cardinal.setAttribute('class', 'n')
-        //     cardinal.innerHTML = 'N'
-        //     tickElement.appendChild(cardinal)
-        // }
         const radians = degrees * (Math.PI / 180)
         const x = (compassBorderRadius - 15) * Math.cos(radians)
         const y = (compassBorderRadius - 15) * Math.sin(radians)
