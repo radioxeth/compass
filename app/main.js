@@ -97,18 +97,18 @@ const setCompass = (heading) => {
     const borderSign = isPointerFixed ? -1 : 0
     const compassBorderElement = document.getElementById('compass-border')
     compassBorderElement.style.transition = transitionStyle
-    compassBorderElement.style.transform = `rotate(${borderSign * heading}deg)`;
+    compassBorderElement.style.transform = `rotate(${borderSign * heading}deg)`
 
     const pointerSign = isPointerFixed ? 1 : 1
     const compassPointerElement = document.getElementById('compass-pointer')
     compassPointerElement.style.transition = transitionStyle
-    compassPointerElement.style.transform = `rotate(${pointerSign * heading}deg)`;
+    compassPointerElement.style.transform = `rotate(${pointerSign * heading}deg)`
     time = Date.now()
 }
 
 const setCompassBearing = (heading) => {
     const headingElement = document.getElementById('compass-bearing-top')
-    headingElement.innerHTML = `${Math.round(heading * 10) / 10}&deg; ${degreeToCardinal(heading)}`
+    headingElement.innerHTML = `${Math.round(heading * 10) / 10}&deg ${degreeToCardinal(heading)}`
 }
 
 const watchPosition = () => {
@@ -142,7 +142,7 @@ const watchPosition = () => {
                     setCompassBearing(null)
                     console.error('Error obtaining location: ', error)
                 }, { enableHighAccuracy: true })
-            }, 3000);
+            }, 3000)
         } else {
             navigator.geolocation.watchPosition((position) => {
                 setStats(position.coords)
@@ -188,7 +188,27 @@ const minorTicks = () => {
     }
 }
 
+const registerServiceWorker = async () => {
+    if ("serviceWorker" in navigator) {
+        try {
+            const registration = await navigator.serviceWorker.register("/serviceWorker.js", {
+                scope: "/",
+            })
+            if (registration.installing) {
+                console.log("Service worker installing")
+            } else if (registration.waiting) {
+                console.log("Service worker installed")
+            } else if (registration.active) {
+                console.log("Service worker active")
+            }
+        } catch (error) {
+            console.error(`Registration failed with ${error}`)
+        }
+    }
+}
+
 const main = () => {
+
     userPreferences()
     setCompass(null)
     setCompassBearing(null)
@@ -196,6 +216,7 @@ const main = () => {
     clock()
     watchPosition()
     minorTicks()
+    registerServiceWorker()
 }
 
 main()
