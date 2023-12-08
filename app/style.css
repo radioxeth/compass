@@ -1,7 +1,8 @@
 :root {
     --size: calc(min(90vw, 90vh));
-
+    --fade-size: calc(min(100vw, 100vh));
     --background-color: #ffffff;
+    --fade-background-color: rgb(255, 255, 255, 0);
     --text-color: #000000;
     --pointer-color: #000000;
     --compass-color: #000000;
@@ -37,12 +38,17 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.container {
+.container-flex {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100vw;
     height: 100vh;
+}
+
+.container {
+    position: absolute;
+    top: 50vh;
 }
 
 @media (aspect-ratio: 16/9) {
@@ -87,6 +93,15 @@ body {
     align-items: center;
     font-size: 12em;
     text-align: center;
+}
+
+.compass-fade {
+    position: absolute;
+    width: var(--fade-size);
+    height: var(--fade-size);
+    border-radius: 50%;
+    box-sizing: border-box;
+    background: linear-gradient(to top, var(--background-color), 75%, var(--fade-background-color));
 }
 
 .cardinal-letter {

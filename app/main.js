@@ -1,8 +1,14 @@
-let isPointerFixed = false
-let isTesting = false
+let isPointerFixed = true
+let isTesting = true
 const getTime = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
 
 const getRandomBetween0And360 = () => Math.floor(Math.random() * 361)
+let count = 0
+const getRandomBetweenNEAndNW = () => {
+    count++
+    const ar = [15, 350, 250, 150, 50, 350]
+    return ar[count % ar.length]
+}
 
 const clock = () => {
     document.getElementById('time').innerHTML = getTime(new Date())
@@ -31,22 +37,6 @@ const userPreferences = () => {
             document.documentElement.setAttribute('data-theme', 'light')
             localStorage.setItem('theme', 'light')
         }
-    })
-
-    const pointerCheckbox = document.getElementById('pointer-checkbox')
-    // load the saved pointer preferences, if any
-    const currentPointer = localStorage.getItem('pointer-fixed') ?? null
-    if (currentPointer) {
-        // If the current pointer is true, set to true
-        const isCurrentPointerFixed = currentPointer === 'true' ? true : false
-        pointerCheckbox.checked = isCurrentPointerFixed
-        isPointerFixed = isCurrentPointerFixed
-    }
-
-    // Listen for changes on the checkbox to toggle between themes
-    pointerCheckbox.addEventListener('change', (e) => {
-        isPointerFixed = e.target.checked
-        localStorage.setItem('pointer-fixed', isPointerFixed)
     })
 }
 
@@ -90,19 +80,48 @@ const degreeToCardinal = (deg) => {
 }
 
 let time = Date.now()
+let currentHeading = 0
 const setCompass = (heading) => {
     const transitionStyle = `transform ${(Date.now() - time) / 1000}s`
 
     const borderSign = isPointerFixed ? -1 : 0
-    const compassBorderElement = document.getElementById('compass-border')
-    compassBorderElement.style.transition = transitionStyle
-    compassBorderElement.style.transform = `rotate(${borderSign * heading}deg)`
-
     const pointerSign = isPointerFixed ? 1 : 1
+
+    const compassBorderElement = document.getElementById('compass-border')
     const compassPointerElement = document.getElementById('compass-pointer')
+    const compassFadeElement = document.getElementById('compass-fade')
+
+    compassBorderElement.style.transition = transitionStyle
     compassPointerElement.style.transition = transitionStyle
-    compassPointerElement.style.transform = `rotate(${pointerSign * heading}deg)`
+    compassFadeElement.style.transition = transitionStyle
+
+    const shortestHeading = calculateShortestRotation(currentHeading, heading)
+    compassBorderElement.style.transform = `rotate(${borderSign * shortestHeading}deg)`
+    compassPointerElement.style.transform = `rotate(${pointerSign * shortestHeading}deg)`
+    compassFadeElement.style.transform = `rotate(${pointerSign * shortestHeading}deg)`
+    // console.log(heading, shortestHeading)
     time = Date.now()
+    currentHeading = shortestHeading
+}
+
+const calculateShortestRotation = (currentDegree, targetDegree) => {
+    // Normalize target and current degrees
+    currentDegree = currentDegree % 360
+    targetDegree = targetDegree % 360
+
+    // Calculate negative target degree
+    const negativeTargetDegree = (targetDegree - 360) % 360
+
+    // Calculate difference
+    const diff = (targetDegree - currentDegree) % 360
+    const negativeDiff = (negativeTargetDegree - currentDegree) % 360
+
+    // Compare absolute value of differences
+    if (Math.abs(diff) <= Math.abs(negativeDiff)) {
+        return targetDegree
+    } else {
+        return negativeTargetDegree
+    }
 }
 
 const setCompassBearing = (heading) => {
@@ -226,8 +245,6 @@ const resizeTicks = () => {
     }
 }
 
-
-
 const registerServiceWorker = async () => {
     if ("serviceWorker" in navigator) {
         try {
@@ -247,8 +264,31 @@ const registerServiceWorker = async () => {
     }
 }
 
+const absoluteOrientation = () => {
+    try {
+        const options = { frequency: 60, referenceFrame: "device" }
+        const sensor = new AbsoluteOrientationSensor(options)
+
+        sensor.addEventListener("reading", () => {
+            // model is a Three.js object instantiated elsewhere.
+            model.quaternion.fromArray(sensor.quaternion).inverse()
+        })
+        sensor.addEventListener("error", (error) => {
+            if (event.error.name === "NotReadableError") {
+                console.log("Sensor is not available.")
+            }
+        })
+        sensor.start()
+    } catch (e) {
+        console.error(e)
+    }
+
+}
+
+
 const main = () => {
 
+    // absoluteOrientation()
     userPreferences()
     setCompass(null)
     setCompassBearing(null)
