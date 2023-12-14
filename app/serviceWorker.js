@@ -1,4 +1,4 @@
-const CACHE_NAME = 'compass-cache-v2'
+const CACHE_NAME = 'compass-cache-v3'
 const urlsToCache = [
     '/',
     '/style.css',
@@ -28,17 +28,19 @@ self.addEventListener('fetch', async (event) => {
 })
 
 
-self.addEventListener('activate', async (event) => {
-    const cacheWhitelist = [CACHE_NAME]
-    event.waitUntil((async () => {
-        const cacheNames = await caches.keys()
-        await Promise.all(
-            cacheNames.map(async (cacheName) => {
-                if (!cacheWhitelist.includes(cacheName)) {
-                    await caches.delete(cacheName)
-                }
-            })
-        )
-    })())
-})
+self.addEventListener('activate', (event) => {
+    event.waitUntil(
+        caches.keys().then((cacheNames) => {
+            return Promise.all(
+                cacheNames.map((cacheName) => {
+                    if (cacheName !== CACHE_NAME) {
+                        console.log(`Deleting old cache: ${cacheName}`)
+                        return caches.delete(cacheName)
+                    }
+                })
+            )
+        })
+    )
+});
+
 
