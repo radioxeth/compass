@@ -46,6 +46,11 @@ body {
     height: 100vh;
 }
 
+.container:hover {
+    cursor: ns-resize;
+}
+
+
 .container {
     position: absolute;
     top: 50vh;

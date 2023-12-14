@@ -1,5 +1,5 @@
 let isPointerFixed = true
-let isTesting = true
+let isTesting = false
 const getTime = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
 
 const getRandomBetween0And360 = () => Math.floor(Math.random() * 361)
@@ -38,6 +38,38 @@ const userPreferences = () => {
             localStorage.setItem('theme', 'light')
         }
     })
+
+    const flexContainerElement = document.getElementById('compass-container')
+
+    let isDragging = false
+    let startY
+    let initialTop
+
+    flexContainerElement.addEventListener('mousedown', (e) => {
+        isDragging = true
+        startY = e.clientY
+        initialTop = flexContainerElement.offsetTop
+    })
+
+    flexContainerElement.addEventListener('mousemove', (e) => {
+        if (isDragging) {
+            const currentY = e.clientY
+            const dy = currentY - startY
+            const finalTop = initialTop + dy
+            flexContainerElement.style.top = `${finalTop}px`
+        }
+    })
+
+    document.addEventListener('mouseup', (e) => {
+        isDragging = false
+    })
+
+    // Optional: prevent default dragging of selected content
+    flexContainerElement.addEventListener('dragstart', (e) => {
+        e.preventDefault()
+
+    })
+
 }
 
 const setStats = (coords) => {
