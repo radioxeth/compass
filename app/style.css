@@ -46,11 +46,6 @@ body {
     height: 100vh;
 }
 
-.container:hover {
-    cursor: ns-resize;
-}
-
-
 .container {
     position: absolute;
     top: 50vh;
@@ -75,7 +70,6 @@ body {
     text-align: center;
     width: 100vw;
     font-size: xx-large;
-    /* top: 47.5vh; */
 }
 
 .compass-pointer {
@@ -189,12 +183,13 @@ body {
 
 .compass-theme {
     margin: 5px;
-    position: absolute;
+    position: relative;
     top: 0;
     right: 0;
 }
 
 .compass-accuracy {
+    z-index: 1000;
     margin: 5px;
     position: absolute;
     top: 50px;
@@ -213,6 +208,23 @@ body {
     position: absolute;
     top: 0px;
     left: 0px;
+    margin: 5px;
+    font-size: large;
+}
+
+.compass-stats-ur {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    margin: 5px;
+    font-size: x-large;
+}
+
+.compass-stats-uc {
+    position: absolute;
+    top: 0px;
+    right: 25%;
+    width: 50%;
     margin: 5px;
     font-size: x-large;
 }
@@ -236,7 +248,7 @@ body {
 
 .pointer-toggle {
     margin: 5px;
-    position: absolute;
+    position: relative;
     bottom: 0;
     right: 0;
 }
@@ -249,19 +261,6 @@ body {
 }
 
 .pointer-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.accuracy-switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-}
-
-.accuracy-switch input {
     opacity: 0;
     width: 0;
     height: 0;
