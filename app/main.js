@@ -1,5 +1,9 @@
+// global variables
 let isPointerFixed = false
 let isTesting = false
+let time = Date.now()
+let currentHeading = 0
+
 const getTime = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
 
 const getRandomBetween0And360 = () => Math.floor(Math.random() * 361)
@@ -89,25 +93,92 @@ const degreeToCardinal = (deg) => {
     return direction
 }
 
-let time = Date.now()
 const setCompass = (heading) => {
     const transitionStyle = `transform ${(Date.now() - time) / 1000}s`
 
     const borderSign = isPointerFixed ? -1 : 0
-    const compassBorderElement = document.getElementById('compass-border')
-    compassBorderElement.style.transition = transitionStyle
-    compassBorderElement.style.transform = `rotate(${borderSign * heading}deg)`
-
     const pointerSign = isPointerFixed ? 1 : 1
+
+    const compassBorderElement = document.getElementById('compass-border')
     const compassPointerElement = document.getElementById('compass-pointer')
+
+    compassBorderElement.style.transition = transitionStyle
     compassPointerElement.style.transition = transitionStyle
-    compassPointerElement.style.transform = `rotate(${pointerSign * heading}deg)`
+
+    const shortestHeading = calculateShortestRotation(currentHeading, heading)
+    compassBorderElement.style.transform = `rotate(${borderSign * shortestHeading}deg)`
+    compassPointerElement.style.transform = `rotate(${pointerSign * shortestHeading}deg)`
     time = Date.now()
+    currentHeading = shortestHeading
+}
+
+const calculateShortestRotation = (currentDegree, targetDegree) => {
+    // Normalize target and current degrees
+    currentDegree = currentDegree % 360
+    targetDegree = targetDegree % 360
+
+    // Calculate negative target degree
+    const negativeTargetDegree = (targetDegree - 360) % 360
+
+    // Calculate difference
+    const diff = (targetDegree - currentDegree) % 360
+    const negativeDiff = (negativeTargetDegree - currentDegree) % 360
+
+    // Compare absolute value of differences
+    if (Math.abs(diff) <= Math.abs(negativeDiff)) {
+        return targetDegree
+    } else {
+        return negativeTargetDegree
+    }
 }
 
 const setCompassBearing = (heading) => {
-    const headingElement = document.getElementById('compass-bearing-top')
+    const headingElement = document.getElementById('compass-bearing')
     headingElement.innerHTML = `${Math.round(heading * 10) / 10}&deg ${degreeToCardinal(heading)}`
+}
+
+const getCurrentPositionForTesting = () => {
+    setInterval(() => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            let heading = getRandomBetween0And360()
+            const tempPosition = {
+                timestamp: position.timestamp,
+                coords: {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    altitude: position.coords.altitude,
+                    accuracy: position.coords.accuracy,
+                    altitudeAccuracy: position.coords.altitudeAccuracy,
+                    heading: heading,  // Overwrite the heading
+                    speed: position.coords.speed
+                }
+            }
+            setStats(tempPosition.coords)
+            setCompass(tempPosition.coords?.heading)
+            setCompassBearing(tempPosition.coords?.heading)
+            currentHeading = heading
+        }, (error) => {
+            // Error callback
+            setStats(null)
+            setCompass(null)
+            setCompassBearing(null)
+            console.error('Error obtaining location: ', error)
+        }, { enableHighAccuracy: true })
+    }, 3000)
+}
+
+const getCurrentPosition = () => {
+    navigator.geolocation.watchPosition((position) => {
+        setStats(position.coords)
+        setCompass(position.coords?.heading)
+        setCompassBearing(position.coords?.heading)
+    }, (error) => {
+        // Error callback
+        setStats(null)
+        setCompass(null)
+        setCompassBearing(null)
+        console.error('Error obtaining location: ', error)
+    }, { enableHighAccuracy: true })
 }
 
 const watchPosition = () => {
@@ -115,48 +186,10 @@ const watchPosition = () => {
     if ('geolocation' in navigator) {
         // Request the current location
         if (isTesting) {
-            setInterval(() => {
-                navigator.geolocation.getCurrentPosition((position) => {
-                    let heading = getRandomBetween0And360()
-                    const tempPosition = {
-                        timestamp: position.timestamp,
-                        coords: {
-                            latitude: position.coords.latitude,
-                            longitude: position.coords.longitude,
-                            altitude: position.coords.altitude,
-                            accuracy: position.coords.accuracy,
-                            altitudeAccuracy: position.coords.altitudeAccuracy,
-                            heading: heading,  // Overwrite the heading
-                            speed: position.coords.speed
-                        }
-                    }
-                    setStats(tempPosition.coords)
-                    setCompass(tempPosition.coords?.heading)
-                    setCompassBearing(tempPosition.coords?.heading)
-                    currentHeading = heading
-                }, (error) => {
-                    // Error callback
-                    setStats(null)
-                    setCompass(null)
-                    setCompassBearing(null)
-                    console.error('Error obtaining location: ', error)
-                }, { enableHighAccuracy: true })
-            }, 3000)
+            getCurrentPositionForTesting()
         } else {
-            navigator.geolocation.watchPosition((position) => {
-                setStats(position.coords)
-                setCompass(position.coords?.heading)
-                setCompassBearing(position.coords?.heading)
-            }, (error) => {
-                // Error callback
-                setStats(null)
-                setCompass(null)
-                setCompassBearing(null)
-                console.error('Error obtaining location: ', error)
-            }, { enableHighAccuracy: true })
+            getCurrentPosition()
         }
-
-
     } else {
         setStats(null)
         setCompass(null)
@@ -217,7 +250,6 @@ const resizeTicks = () => {
     const compassBorderRadius = compassBorderElement.offsetWidth / 2
     while (degrees < 360) {
         const tickElement = document.getElementById(`tick-${degrees}`)
-
         const radians = degrees * (Math.PI / 180)
         const x = (compassBorderRadius - 15) * Math.cos(radians)
         const y = (compassBorderRadius - 15) * Math.sin(radians)
@@ -225,8 +257,6 @@ const resizeTicks = () => {
         degrees += 5
     }
 }
-
-
 
 const registerServiceWorker = async () => {
     if ("serviceWorker" in navigator) {
@@ -248,7 +278,6 @@ const registerServiceWorker = async () => {
 }
 
 const main = () => {
-
     userPreferences()
     setCompass(null)
     setCompassBearing(null)

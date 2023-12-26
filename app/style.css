@@ -37,7 +37,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.container {
+.compass-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,20 +46,20 @@ body {
 }
 
 @media (aspect-ratio: 16/9) {
-    .container {
+    .compass-container {
         align-items: flex-start;
         /* adjust to the top when width is greater */
     }
 }
 
 @media (aspect-ratio: 9/16) {
-    .container {
+    .compass-container {
         justify-content: flex-start;
         /* adjust to the left when height is greater */
     }
 }
 
-.compass-bearing-top {
+.compass-stats-uc {
     position: absolute;
     text-align: center;
     width: 100vw;
@@ -152,6 +152,7 @@ body {
     width: 10px;
     height: 0px;
     border: 1px solid var(--minor-tick-color);
+    border-radius: 10px;
 }
 
 .minor-tick-5 {
@@ -159,6 +160,7 @@ body {
     width: 5px;
     height: 0px;
     border: 1px solid var(--minor-tick-color);
+    border-radius: 5px;
 }
 
 .compass-ticks {
@@ -229,19 +231,6 @@ body {
 }
 
 .pointer-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.accuracy-switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-}
-
-.accuracy-switch input {
     opacity: 0;
     width: 0;
     height: 0;
