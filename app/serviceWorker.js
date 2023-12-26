@@ -1,4 +1,4 @@
-const CACHE_NAME = 'compass-cache-v2'
+const CACHE_NAME = 'compass-cache-v1'
 const urlsToCache = [
     '/',
     '/style.css',
@@ -10,35 +10,32 @@ const addResourcesToCache = async (resources) => {
     await cache.addAll(resources)
 }
 
-
-self.addEventListener('install', async (event) => {
-    try {
+self.addEventListener('install', (event) => {
+    event.waitUntil(
         addResourcesToCache(urlsToCache)
-    } catch (err) {
-        console.error('Error during service worker install:', err)
-    }
+            .then(() => self.skipWaiting()) // Forces the waiting service worker to become the active service worker
+            .catch((err) => console.error('Error during service worker install:', err))
+    )
 })
 
-
-self.addEventListener('fetch', async (event) => {
-    event.respondWith((async () => {
-        const response = await caches.match(event.request)
-        return response || fetch(event.request)
-    })())
+self.addEventListener('fetch', (event) => {
+    event.respondWith(
+        caches.match(event.request)
+            .then(response => response || fetch(event.request))
+    )
 })
 
-
-self.addEventListener('activate', async (event) => {
+self.addEventListener('activate', (event) => {
     const cacheWhitelist = [CACHE_NAME]
-    event.waitUntil((async () => {
-        const cacheNames = await caches.keys()
-        await Promise.all(
-            cacheNames.map(async (cacheName) => {
-                if (!cacheWhitelist.includes(cacheName)) {
-                    await caches.delete(cacheName)
-                }
-            })
-        )
-    })())
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cacheName => {
+                    if (!cacheWhitelist.includes(cacheName)) {
+                        return caches.delete(cacheName)
+                    }
+                })
+            )
+        }).then(() => self.clients.claim()) // Takes control of the clients as soon as the service worker becomes active
+    )
 })
-
