@@ -1,6 +1,6 @@
 // global variables
 let isPointerFixed = false
-let isTesting = true
+let isTesting = false
 let time = Date.now()
 let currentHeading = 0
 
