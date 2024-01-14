@@ -1,4 +1,4 @@
-const CACHE_NAME = 'compass-cache-v2'
+const CACHE_NAME = 'Sun, 14 Jan 2024 16:20:13 GMT'
 const urlsToCache = [
     '/',
     '/style.css',
