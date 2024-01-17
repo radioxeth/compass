@@ -17,33 +17,43 @@
     <div id="compass-stats-uc" class="compass-stats-uc">
         <span id="compass-bearing"></span>
     </div>
-    <div class="compass-stats-bl">
+    <div class="compass-stats-ur">
         <table>
             <tr>
-                <td colspan="2"><span id="time"></span></td>
+                <td><span id="time"></span></td>
             </tr>
+        </table>
+    </div>
+    <div class="compass-stats-bl">
+        <table>
             <tr>
                 <td><span id="latitude">--</span></td>
                 <td><span id="longitude">--</span></td>
             </tr>
         </table>
     </div>
-    <div class="compass-theme">
-        <div class="theme-switch-wrapper">
-            <label class="theme-switch" title="Toggle theme" for="theme-checkbox">
-                <input type="checkbox" id="theme-checkbox" />
-                <div class="slider round"></div>
-            </label>
-        </div>
+    <div class="compass-stats-br">
+        <table>
+            <tr>
+                <td>
+                    <label class=" theme-switch" title="Toggle theme" for="theme-checkbox">
+                        <input type="checkbox" id="theme-checkbox" />
+                        <div class="slider round"></div>
+                    </label>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <label class="pointer-switch" title="Toggle pointer" for="pointer-checkbox">
+                        <input type="checkbox" id="pointer-checkbox" />
+                        <div class="slider round"></div>
+                    </label>
+                </td>
+            </tr>
+        </table>
     </div>
-    <div class="pointer-toggle">
-        <div class="pointer-switch-wrapper">
-            <label class="pointer-switch" title="Toggle pointer" for="pointer-checkbox">
-                <input type="checkbox" id="pointer-checkbox" />
-                <div class="slider round"></div>
-            </label>
-        </div>
-    </div>
+
+
     <div class="compass-container">
         <div id="compass-border" class="compass-border">
             <div id="compass-pointer" class="compass-pointer"></div>
