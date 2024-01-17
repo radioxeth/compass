@@ -60,16 +60,15 @@ const setCoords = (coords) => {
 }
 
 const speedMPH = (speedMPS) => {
-    if (speedMPS) {
-        return `${Math.round(speedMPS * 2.236936)}`
-    } else {
+    if (speedMPS === null || typeof speedMPS === 'undefined') {
         return '--'
     }
+    return `${Math.round(speedMPS * 2.236936)}`
 }
 
 const degreeToCardinal = (deg) => {
     let direction = '--'
-    if (deg === null) {
+    if (deg === null || typeof deg === 'undefined') {
         return direction
     }
     if ((deg >= 337.5 && deg <= 360) || (deg >= 0 && deg < 22.5)) {
@@ -128,47 +127,53 @@ const getShortestRotation = (currentHeading, targetHeading) => {
 
 const setCompassBearing = (heading) => {
     const headingElement = document.getElementById('compass-bearing')
+    if (heading === null || typeof heading === 'undefined') {
+        headingElement.innerHTML = '--'
+        return
+    }
     headingElement.innerHTML = `${Math.round(heading * 10) / 10}&deg ${degreeToCardinal(heading)}`
 }
 
 const getCurrentPositionForTesting = () => {
-    let currentHeading =
-        setInterval(() => {
-            navigator.geolocation.getCurrentPosition((position) => {
-                let heading = getRandomBetween0And360()
-                const tempPosition = {
-                    timestamp: position.timestamp,
-                    coords: {
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                        altitude: position.coords.altitude,
-                        accuracy: position.coords.accuracy,
-                        altitudeAccuracy: position.coords.altitudeAccuracy,
-                        heading: heading,  // Overwrite the heading
-                        speed: position.coords.speed
-                    }
+    let currentHeading = 0
+    setInterval(() => {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const heading = getRandomBetween0And360()
+            const tempPosition = {
+                timestamp: position.timestamp,
+                coords: {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    altitude: position.coords.altitude,
+                    accuracy: position.coords.accuracy,
+                    altitudeAccuracy: position.coords.altitudeAccuracy,
+                    heading: heading,  // Overwrite the heading
+                    speed: position.coords.speed,
                 }
-                setCoords(tempPosition.coords)
+            }
+            if (speedMPH(tempPosition.coords?.speed) > 0) {
                 currentHeading = setCompassHeading(tempPosition.coords?.heading, currentHeading)
                 setCompassBearing(tempPosition.coords?.heading)
-            }, (error) => {
-                // Error callback
-                setCoords(null)
-                setCompassHeading(null, null)
-                setCompassBearing(null)
-                console.error('Error obtaining location: ', error)
-            }, { enableHighAccuracy: true })
-        }, 3000)
+            }
+            setCoords(tempPosition.coords)
+        }, (error) => {
+            // Error callback
+            setCoords(null)
+            setCompassHeading(null, null)
+            setCompassBearing(null)
+            console.error('Error obtaining location: ', error)
+        }, { enableHighAccuracy: true })
+    }, 3000)
 }
 
 const getCurrentPosition = () => {
     let currentHeading = 0
     navigator.geolocation.watchPosition((position) => {
-        if (position.coords?.speed > 0) {
-            setCoords(position.coords)
+        if (speedMPH(position.coords?.speed) > 0) {
             currentHeading = setCompassHeading(position.coords?.heading, currentHeading)
             setCompassBearing(position.coords?.heading)
         }
+        setCoords(position.coords)
     }, (error) => {
         // Error callback
         setCoords(null)
