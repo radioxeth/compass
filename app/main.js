@@ -139,6 +139,7 @@ const getCurrentPositionForTesting = () => {
     setInterval(() => {
         navigator.geolocation.getCurrentPosition((position) => {
             const heading = getRandomBetween0And360()
+            const speed = 100
             const tempPosition = {
                 timestamp: position.timestamp,
                 coords: {
@@ -148,7 +149,7 @@ const getCurrentPositionForTesting = () => {
                     accuracy: position.coords.accuracy,
                     altitudeAccuracy: position.coords.altitudeAccuracy,
                     heading: heading,  // Overwrite the heading
-                    speed: position.coords.speed,
+                    speed: speed, // Overwrite the speed
                 }
             }
             if (speedMPH(tempPosition.coords?.speed) > 0) {
