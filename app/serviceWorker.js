@@ -1,8 +1,14 @@
-const CACHE_NAME = 'v1705467967673'
+const CACHE_NAME = 'v1705620223113'
 const urlsToCache = [
     '/',
     '/style.css',
-    '/main.js'
+    '/main.js',
+    '/images/compass-dir-up-dark.svg',
+    '/images/compass-dir-up-light.svg',
+    '/images/compass-north-up-dark.svg',
+    '/images/compass-north-up-light.svg',
+    '/images/light-to-dark.svg',
+    '/images/dark-to-light.svg',
 ]
 
 const addResourcesToCache = async (resources) => {
