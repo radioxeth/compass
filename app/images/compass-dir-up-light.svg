@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="48"
+   height="48"
+   viewBox="0 0 48 48"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="compass-dir-up-light.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:document-units="px"
+     inkscape:zoom="16.791667"
+     inkscape:cx="24.029776"
+     inkscape:cy="24"
+     inkscape:window-width="1920"
+     inkscape:window-height="1002"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <linearGradient
+       id="linearGradient10">
+      <stop
+         style="stop-color:#28cb0d;stop-opacity:1;"
+         offset="0"
+         id="stop13" />
+      <stop
+         style="stop-color:#000000;stop-opacity:1;"
+         offset="1"
+         id="stop14" />
+    </linearGradient>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g23"
+       inkscape:label="dirs"
+       transform="rotate(45,24,24)">
+      <path
+         style="fill:#808080;fill-opacity:1;stroke:#ffffff;stroke-width:4;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+         d="m 2,24 c 6,0 6,0 6,0"
+         id="path4"
+         inkscape:label="W" />
+      <path
+         style="fill:#808080;fill-opacity:1;stroke:#ffffff;stroke-width:4;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+         d="m 40,24 c 6,0 6,0 6,0"
+         id="path1"
+         inkscape:label="E" />
+      <path
+         style="fill:#808080;fill-opacity:1;stroke:#ffffff;stroke-width:4;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+         d="m 24,40 c 0,6 0,6 0,6"
+         id="path23"
+         inkscape:label="S" />
+      <path
+         style="fill:#808080;fill-opacity:1;stroke:#28cc00;stroke-width:4;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+         d="m 24,2 c 0,6 0,6 0,6"
+         id="path22"
+         inkscape:label="N" />
+    </g>
+    <path
+       style="fill:#808080;fill-opacity:1;stroke:#28cc0d;stroke-width:4;stroke-linecap:round;stroke-dasharray:none;stroke-opacity:1"
+       d="M 24.000001,6.0000001 23.999999,42"
+       id="path3"
+       inkscape:label="Needle" />
+    <circle
+       style="fill:none;stroke:#ffffff;stroke-width:3.98655;stroke-dasharray:none;stroke-opacity:1"
+       id="path2"
+       cx="24"
+       cy="24"
+       r="22.006725"
+       inkscape:label="Compass" />
+  </g>
+</svg>
