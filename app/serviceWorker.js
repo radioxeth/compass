@@ -1,4 +1,4 @@
-const CACHE_NAME = 'v1705620223113'
+const CACHE_NAME = 'v1722531908513'
 const urlsToCache = [
     '/',
     '/style.css',
