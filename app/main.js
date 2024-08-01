@@ -280,6 +280,27 @@ const registerServiceWorker = async () => {
     }
 }
 
+const copy = () => {
+    const latitude = document.getElementById('latitude').innerText
+    const longitude = document.getElementById('longitude').innerText
+
+    const text = `${latitude.trim()}, ${longitude.trim()}`
+    navigator.clipboard.writeText(text)
+
+    //fade out and fade in
+    const copyButton = document.getElementById('copy')
+    copyButton.style.opacity = 0
+    copyButton.style.transition = 'opacity 0.5s'
+    setTimeout(() => {
+        copyButton.style.opacity = 1
+    }, 500)
+}
+
+const copyListener = () => {
+    const copyButton = document.getElementById('copy')
+    copyButton.addEventListener('click', () => { copy() })
+}
+
 const main = () => {
     userPreferences()
     setCompassHeading(null)
@@ -289,6 +310,7 @@ const main = () => {
     watchPosition()
     setTicks()
     registerServiceWorker()
+    copyListener()
 }
 
 main()
