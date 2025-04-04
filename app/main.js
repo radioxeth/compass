@@ -6,6 +6,21 @@ let time = Date.now()
 const getTime = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
 
 const getRandomBetween0And360 = () => Math.floor(Math.random() * 360)
+const getRandomBetween0and90 = () => Math.floor(Math.random() * 90)
+
+let currentCoords = {
+    latitude: null,
+    longitude: null,
+    heading: null,
+}
+
+let startCoords = {
+    latitude: 0,
+    longitude: 0,
+    heading: 0,
+}
+
+let startHeading = 0
 
 const clock = () => {
     document.getElementById('time').innerHTML = getTime(new Date())
@@ -57,6 +72,13 @@ const setCoords = (coords) => {
     document.getElementById('latitude').innerHTML = coords?.latitude ?? '--'
     document.getElementById('longitude').innerHTML = coords?.longitude ?? '--'
     document.getElementById('speed').innerHTML = `${speedMPH(coords?.speed)} mph`
+    currentCoords = {
+        ...currentCoords,
+        latitude: coords?.latitude ?? null,
+        longitude: coords?.longitude ?? null,
+        heading: coords?.heading ?? null,
+    }
+
 }
 
 const speedMPH = (speedMPS) => {
@@ -138,13 +160,18 @@ const getCurrentPositionForTesting = () => {
     let currentHeading = 0
     setInterval(() => {
         navigator.geolocation.getCurrentPosition((position) => {
-            const heading = getRandomBetween0And360()
+            let heading = 90
+            startCoords.latitude += 1
+            startCoords.longitude += 0
+            const lat = startCoords.latitude
+            const lon = startCoords.longitude
+
             const speed = 100
             const tempPosition = {
                 timestamp: position.timestamp,
                 coords: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
+                    latitude: lat,
+                    longitude: lon,
                     altitude: position.coords.altitude,
                     accuracy: position.coords.accuracy,
                     altitudeAccuracy: position.coords.altitudeAccuracy,
@@ -157,6 +184,7 @@ const getCurrentPositionForTesting = () => {
                 setCompassBearing(tempPosition.coords?.heading)
             }
             setCoords(tempPosition.coords)
+            setPins(tempPosition)
         }, (error) => {
             // Error callback
             setCoords(null)
@@ -199,6 +227,7 @@ const watchPosition = () => {
         setCompassBearing(null)
         console.error('Geolocation API not supported by this browser.')
     }
+    setPins()
 }
 
 const setTicks = () => {
@@ -245,6 +274,75 @@ const setTicks = () => {
         degrees += 5
     }
     window.onresize = resizeTicks
+}
+
+const toRadians = (degrees) => {
+    return degrees * (Math.PI / 180)
+}
+
+const toDegrees = (radians) => {
+    return radians * (180 / Math.PI)
+}
+
+const calculateRelativeBearing = (lat, lon, latPrime, lonPrime, headingDeg) => {
+    // Convert degrees to radians
+    const phi1 = toRadians(lat)
+    const phi2 = toRadians(latPrime)
+    const deltaLambda = toRadians(lonPrime - lon)
+
+    // Calculate initial bearing
+    const x = Math.sin(deltaLambda) * Math.cos(phi2)
+    const y = Math.cos(phi1) * Math.sin(phi2) - Math.sin(phi1) * Math.cos(phi2) * Math.cos(deltaLambda)
+    const initialBearing = Math.atan2(x, y)
+
+    // Convert to degrees and normalize to [0, 360)
+    const initialBearingDeg = (toDegrees(initialBearing) + 360) % 360
+
+    // Calculate relative bearing
+    const relativeBearing = (initialBearingDeg - headingDeg + 360) % 360
+
+    return relativeBearing
+}
+
+
+const setPins = (position) => {
+    const compassBorderElement = document.getElementById('compass-border')
+    const compassBorderRadius = compassBorderElement.offsetWidth / 2
+    const pins = JSON.parse(localStorage.getItem('pins')) || []
+    // remove all pins
+    const pinElements = document.querySelectorAll('.pin')
+    pinElements.forEach((pinElement) => {
+        pinElement.remove()
+    })
+    if (!position) {
+        return
+    }
+    // add all pins
+    pins.forEach((pin, index) => {
+        const pinElement = document.createElement('div')
+        pinElement.setAttribute('class', 'pin')
+        pinElement.setAttribute('id', `pin-${index}`)
+        pinElement.innerHTML = `<div class="pin-label">${index + 1}</div>`
+        // console.log(position)
+        const relativePinBearing = calculateRelativeBearing(
+            position.coords.latitude,
+            position.coords.longitude,
+            pin.latitude,
+            pin.longitude,
+            position.coords.heading
+        )
+
+        // console.log(`relativePinBearing pin ${index}`, relativePinBearing)
+
+        // Convert relative bearing to radians
+        const relativePinBearingRad = toRadians(relativePinBearing)
+        // Calculate x and y coordinates
+        const x = (compassBorderRadius + 15) * Math.cos(relativePinBearingRad)
+        const y = (compassBorderRadius + 15) * Math.sin(relativePinBearingRad)
+        // Set the transform property to position and rotate the pin
+        pinElement.style.transform = `translate(${x}px, ${y}px) rotate(${pin.latitude}deg)`
+        compassBorderElement.appendChild(pinElement)
+    })
 }
 
 const resizeTicks = () => {
@@ -301,6 +399,31 @@ const copyListener = () => {
     copyButton.addEventListener('click', () => { copy() })
 }
 
+const dropPinListener = () => {
+    // long press on the compass drops a pin in local storage that appear as a marker on the edge of the compass
+    const compassBorder = document.getElementById('compass-border')
+    // long press on the compassBorder event
+    let timer = null
+    compassBorder.addEventListener('mousedown', (e) => {
+        timer = setTimeout(() => {
+            console.log('long press')
+            console.log('currentCoords', currentCoords)
+            // add pin to local storage
+            const pins = JSON.parse(localStorage.getItem('pins')) || []
+            const pin = {
+                latitude: currentCoords.latitude,
+                longitude: currentCoords.longitude,
+                timestamp: Date.now(),
+            }
+            pins.push(pin)
+            localStorage.setItem('pins', JSON.stringify(pins))
+        }, 1000)
+    })
+    compassBorder.addEventListener('mouseup', () => {
+        clearTimeout(timer)
+    })
+}
+
 const main = () => {
     userPreferences()
     setCompassHeading(null)
@@ -311,6 +434,7 @@ const main = () => {
     setTicks()
     registerServiceWorker()
     copyListener()
+    dropPinListener()
 }
 
 main()
