@@ -203,6 +203,7 @@ const getCurrentPosition = () => {
             setCompassBearing(position.coords?.heading)
         }
         setCoords(position.coords)
+	setPins(position)
     }, (error) => {
         // Error callback
         setCoords(null)
