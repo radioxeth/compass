@@ -157,12 +157,12 @@ const setCompassBearing = (heading) => {
 }
 
 const getCurrentPositionForTesting = () => {
-    let currentHeading = 0
+    let currentHeading = 90
     setInterval(() => {
         navigator.geolocation.getCurrentPosition((position) => {
-            let heading = 90
-            startCoords.latitude += 1
-            startCoords.longitude += 0
+            let heading = currentHeading
+            startCoords.latitude += 0
+            startCoords.longitude += 1
             const lat = startCoords.latitude
             const lon = startCoords.longitude
 
@@ -305,7 +305,6 @@ const calculateRelativeBearing = (lat, lon, latPrime, lonPrime, headingDeg) => {
     return relativeBearing
 }
 
-
 const setPins = (position) => {
     const compassBorderElement = document.getElementById('compass-border')
     const compassBorderRadius = compassBorderElement.offsetWidth / 2
@@ -323,8 +322,12 @@ const setPins = (position) => {
         const pinElement = document.createElement('div')
         pinElement.setAttribute('class', 'pin')
         pinElement.setAttribute('id', `pin-${index}`)
-        pinElement.innerHTML = `<div class="pin-label">${index + 1}</div>`
-        // console.log(position)
+        // add label
+        const labelElement = document.createElement('div')
+        labelElement.setAttribute('class', 'pin-label')
+        labelElement.innerHTML = `${index + 1}`
+        pinElement.appendChild(labelElement)
+
         const relativePinBearing = calculateRelativeBearing(
             position.coords.latitude,
             position.coords.longitude,
@@ -333,15 +336,12 @@ const setPins = (position) => {
             position.coords.heading
         )
 
-        // console.log(`relativePinBearing pin ${index}`, relativePinBearing)
-
-        // Convert relative bearing to radians
-        const relativePinBearingRad = toRadians(relativePinBearing)
         // Calculate x and y coordinates
-        const x = (compassBorderRadius + 15) * Math.cos(relativePinBearingRad)
-        const y = (compassBorderRadius + 15) * Math.sin(relativePinBearingRad)
-        // Set the transform property to position and rotate the pin
-        pinElement.style.transform = `translate(${x}px, ${y}px) rotate(${pin.latitude}deg)`
+        const x = (compassBorderRadius + 15) * Math.cos(toRadians(relativePinBearing))
+        const y = (compassBorderRadius + 15) * Math.sin(toRadians(relativePinBearing))
+
+        // Set the rotation of the pin
+        pinElement.style.transform = `translate(${x}px, ${y}px) rotate(${relativePinBearing + 90}deg)`
         compassBorderElement.appendChild(pinElement)
     })
 }
@@ -418,10 +418,50 @@ const dropPinListener = () => {
             }
             pins.push(pin)
             localStorage.setItem('pins', JSON.stringify(pins))
+
+            compassBorder.style.opacity = .25
+            compassBorder.style.transition = 'opacity 0.5s'
+            setTimeout(() => {
+                compassBorder.style.opacity = 1
+            }, 500)
         }, 1000)
     })
     compassBorder.addEventListener('mouseup', () => {
         clearTimeout(timer)
+    })
+
+
+    // touch screen
+    let longPressTimer = null
+    compassBorder.addEventListener('touchstart', (e) => {
+        e.preventDefault() // Prevent default touch behavior
+        longPressTimer = setTimeout(() => {
+            console.log('long press')
+            console.log('currentCoords', currentCoords)
+            // add pin to local storage
+            const pins = JSON.parse(localStorage.getItem('pins')) || []
+            const pin = {
+                latitude: currentCoords.latitude,
+                longitude: currentCoords.longitude,
+                timestamp: Date.now(),
+            }
+            pins.push(pin)
+            localStorage.setItem('pins', JSON.stringify(pins))
+
+            compassBorder.style.opacity = .25
+            compassBorder.style.transition = 'opacity 0.5s'
+            setTimeout(() => {
+                compassBorder.style.opacity = 1
+            }, 500)
+        }, 1000)
+    })
+
+    compassBorder.addEventListener('touchend', () => {
+        clearTimeout(longPressTimer)
+    })
+
+    compassBorder.addEventListener('touchcancel', () => {
+        clearTimeout(longPressTimer)
     })
 }
 
