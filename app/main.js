@@ -162,7 +162,7 @@ const getCurrentPositionForTesting = () => {
         navigator.geolocation.getCurrentPosition((position) => {
             let heading = currentHeading
             startCoords.latitude += 0
-            startCoords.longitude += 1
+            startCoords.longitude += .1
             const lat = startCoords.latitude
             const lon = startCoords.longitude
 
@@ -341,7 +341,7 @@ const setPins = (position) => {
         const y = (compassBorderRadius + 15) * Math.sin(toRadians(relativePinBearing))
 
         // Set the rotation of the pin
-        pinElement.style.transform = `translate(${x}px, ${y}px) rotate(${relativePinBearing + 90}deg)`
+        pinElement.style.transform = `translate(${x}px, ${y}px) rotate(${relativePinBearing}deg)`
         compassBorderElement.appendChild(pinElement)
     })
 }
