@@ -419,11 +419,11 @@ const dropPinListener = () => {
             pins.push(pin)
             localStorage.setItem('pins', JSON.stringify(pins))
 
-            compassBorder.style.opacity = .25
-            compassBorder.style.transition = 'opacity 0.5s'
+            compassBorder.style.opacity = 0.25
+            compassBorder.style.transition = 'opacity 1s'
             setTimeout(() => {
                 compassBorder.style.opacity = 1
-            }, 500)
+            }, 1000)
         }, 1000)
     })
     compassBorder.addEventListener('mouseup', () => {
