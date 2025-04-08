@@ -1,6 +1,6 @@
 // global variables
 let isPointerFixed = false
-let isTesting = true
+let isTesting = false
 let time = Date.now()
 
 const getTime = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
