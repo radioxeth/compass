@@ -1,6 +1,6 @@
 // global variables
 let isPointerFixed = false
-let isTesting = false
+let isTesting = true
 let time = Date.now()
 
 const getTime = (date) => `${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`
@@ -159,39 +159,31 @@ const setCompassBearing = (heading) => {
 const getCurrentPositionForTesting = () => {
     let currentHeading = 90
     setInterval(() => {
-        navigator.geolocation.getCurrentPosition((position) => {
-            let heading = currentHeading
-            startCoords.latitude += 0
-            startCoords.longitude += .1
-            const lat = startCoords.latitude
-            const lon = startCoords.longitude
+        let heading = currentHeading
+        startCoords.latitude += 0
+        startCoords.longitude += .1
+        const lat = startCoords.latitude
+        const lon = startCoords.longitude
 
-            const speed = 100
-            const tempPosition = {
-                timestamp: position.timestamp,
-                coords: {
-                    latitude: lat,
-                    longitude: lon,
-                    altitude: position.coords.altitude,
-                    accuracy: position.coords.accuracy,
-                    altitudeAccuracy: position.coords.altitudeAccuracy,
-                    heading: heading,  // Overwrite the heading
-                    speed: speed, // Overwrite the speed
-                }
+        const speed = 100
+        const tempPosition = {
+            timestamp: Date.now(),
+            coords: {
+                latitude: lat,
+                longitude: lon,
+                altitude: 0,
+                accuracy: 1,
+                altitudeAccuracy: 1,
+                heading: heading,  // Overwrite the heading
+                speed: speed, // Overwrite the speed
             }
-            if (speedMPH(tempPosition.coords?.speed) > 0) {
-                currentHeading = setCompassHeading(tempPosition.coords?.heading, currentHeading)
-                setCompassBearing(tempPosition.coords?.heading)
-            }
-            setCoords(tempPosition.coords)
-            setPins(tempPosition)
-        }, (error) => {
-            // Error callback
-            setCoords(null)
-            setCompassHeading(null, null)
-            setCompassBearing(null)
-            console.error('Error obtaining location: ', error)
-        }, { enableHighAccuracy: true })
+        }
+        if (speedMPH(tempPosition.coords?.speed) > 0) {
+            currentHeading = setCompassHeading(tempPosition.coords?.heading, currentHeading)
+            setCompassBearing(tempPosition.coords?.heading)
+        }
+        setCoords(tempPosition.coords)
+        setPins(tempPosition)
     }, 3000)
 }
 
@@ -341,7 +333,7 @@ const setPins = (position) => {
         const y = (compassBorderRadius + 15) * Math.sin(toRadians(relativePinBearing))
 
         // Set the rotation of the pin
-        pinElement.style.transform = `translate(${x}px, ${y}px) rotate(${relativePinBearing}deg)`
+        pinElement.style.transform = `translate(${x}px, ${y}px)`
         compassBorderElement.appendChild(pinElement)
     })
 }
