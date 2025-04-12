@@ -292,9 +292,10 @@ const calculateRelativeBearing = (lat, lon, latPrime, lonPrime, headingDeg) => {
     const initialBearingDeg = (toDegrees(initialBearing) + 360) % 360
 
     // Calculate relative bearing
-    const relativeBearing = (initialBearingDeg - headingDeg + 360) % 360
+    const relativeBearing = ((initialBearingDeg - headingDeg + 360) % 360)
 
-    return relativeBearing
+    // Adjust for compass behavior (e.g., if the compass pointer is fixed)
+    return isPointerFixed ? (360 - relativeBearing) % 360 : relativeBearing
 }
 
 const setPins = (position) => {
